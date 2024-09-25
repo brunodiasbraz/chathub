@@ -254,11 +254,12 @@ const LoggedInLayout = ({ children }) => {
         position="absolute"
         className={clsx(classes.appBar, drawerOpen && classes.appBarShift)}
         color={process.env.NODE_ENV === "development" ? "inherit" : "primary"}
+        elevation={0} //Retirar a Sombra
       >
         <Toolbar variant="dense" className={classes.toolbar}>
           <IconButton
             edge="start"
-            color="inherit"
+            color="secondary"
             aria-label="open drawer"
             onClick={() => setDrawerOpen(!drawerOpen)}
             className={clsx(
@@ -271,7 +272,7 @@ const LoggedInLayout = ({ children }) => {
           <Typography
             component="h1"
             variant="h6"
-            color="inherit"
+            color="secondary"
             noWrap
             className={classes.title}
           >
@@ -285,7 +286,7 @@ const LoggedInLayout = ({ children }) => {
               aria-controls="menu-appbar"
               aria-haspopup="true"
               onClick={handleMenu}
-              color="inherit"
+              color="secondary"
             >
               <AccountCircle />
             </IconButton>

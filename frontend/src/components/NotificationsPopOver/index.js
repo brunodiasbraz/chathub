@@ -194,7 +194,7 @@ const NotificationsPopOver = () => {
 				onClick={handleClick}
 				ref={anchorEl}
 				aria-label="Open Notifications"
-				color="inherit"
+				color="secondary"
 			>
 				<Badge
 					badgeContent={notifications.length}

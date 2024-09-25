@@ -37,14 +37,14 @@ const Copyright = () => {
 
 const useStyles = makeStyles((theme) => ({
   paper: {
-    marginTop: theme.spacing(8),
+    marginTop: theme.spacing(9),
     display: "flex",
     flexDirection: "column",
     alignItems: "center",
   },
   form: {
     width: "100%", // Fix IE 11 issue.
-    marginTop: theme.spacing(1),
+    marginTop: theme.spacing(2),
   },
   submit: {
     margin: theme.spacing(3, 0, 2),
@@ -73,7 +73,7 @@ const Login = () => {
       <CssBaseline />
       <div className={classes.paper}>
         <img alt="logo" src={logo}></img>
-        <Typography component="h1" variant="h5">
+        <Typography component="h1" variant="h5" style={{ marginTop: '20px' }}>
           {i18n.t("login.title")}
         </Typography>
         <form className={classes.form} noValidate onSubmit={handlSubmit}>
@@ -121,6 +121,7 @@ const Login = () => {
             variant="contained"
             color="primary"
             className={classes.submit}
+            style={{ color: "white" }}
           >
             {i18n.t("login.buttons.submit")}
           </Button>
