@@ -24,7 +24,8 @@ import {
   SettingsOutlined,
   SyncAlt,
   VpnKeyRounded,
-  WhatsApp
+  WhatsApp,
+  EmojiFlagsRounded
 } from "@material-ui/icons";
 
 import { i18n } from "../translate/i18n";
@@ -109,6 +110,11 @@ const MainListItems = (props) => {
         to="/tickets"
         primary={i18n.t("mainDrawer.listItems.tickets")}
         icon={<WhatsApp />}
+      />
+      <ListItemLink
+        to="/campaign"
+        primary={i18n.t("mainDrawer.listItems.tickets")}
+        icon={<EmojiFlagsRounded/>}
       />
       <ListItemLink
         to="/contacts"
