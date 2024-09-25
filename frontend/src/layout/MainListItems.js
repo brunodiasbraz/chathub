@@ -112,11 +112,6 @@ const MainListItems = (props) => {
         icon={<WhatsApp />}
       />
       <ListItemLink
-        to="/campaign"
-        primary={i18n.t("mainDrawer.listItems.tickets")}
-        icon={<EmojiFlagsRounded/>}
-      />
-      <ListItemLink
         to="/contacts"
         primary={i18n.t("mainDrawer.listItems.contacts")}
         icon={<ContactPhoneOutlined />}
@@ -140,6 +135,11 @@ const MainListItems = (props) => {
             <ListSubheader inset className={classes.sub}>
               {i18n.t("mainDrawer.listItems.administration")}
             </ListSubheader>
+            <ListItemLink
+              to="/campaign"
+              primary="Campanhas"
+              icon={<EmojiFlagsRounded/>}
+            />
             <ListItemLink
               to="/connections"
               primary={i18n.t("mainDrawer.listItems.connections")}
