@@ -7,15 +7,13 @@ const useStyles = makeStyles((theme) => ({
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
-    minHeight: '80vh', // Faz com que o conteúdo fique centralizado verticalmente
-    backgroundColor: '#f5f5f5', // Cor de fundo clara para a página
+    minHeight: '80vh'
   },
   paper: {
     padding: theme.spacing(4),
     textAlign: 'center',
     backgroundColor: '#fff',
     borderRadius: theme.shape.borderRadius,
-    boxShadow: theme.shadows[3],
   },
   input: {
     marginBottom: theme.spacing(2),
