@@ -292,7 +292,7 @@ const messages = {
         success: "Atendente salvo com sucesso.",
       },
       chat: {
-        noTicketMessage: "Selecione um ticket para começar a conversar.",
+        noTicketMessage: "Selecione um ticket para começar a conversar ou clique em novo para iniciar uma nova conversa!",
       },
       uploads: {
         titles: {
@@ -397,6 +397,7 @@ const messages = {
           tags: "Tags",
           queues: "Setores",
           administration: "Administração",
+          campaign: "Campanhas",
           users: "Atendentes",
           company: "Empresa",
           integrations: "Integrações",

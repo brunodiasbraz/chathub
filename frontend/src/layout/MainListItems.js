@@ -137,7 +137,7 @@ const MainListItems = (props) => {
             </ListSubheader>
             <ListItemLink
               to="/campaign"
-              primary="Campanhas"
+              primary={i18n.t("mainDrawer.listItems.campaign")}
               icon={<EmojiFlagsRounded/>}
             />
             <ListItemLink
