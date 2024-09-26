@@ -3,7 +3,7 @@ import { Response as Res } from "express";
 
 import User from "../../models/User";
 import AppError from "../../errors/AppError";
-import ShowUserService from "../UserServices/ShowUserService";
+import {ShowUserService} from "../UserServices/ShowUserService";
 import authConfig from "../../config/auth";
 import {
   createAccessToken,

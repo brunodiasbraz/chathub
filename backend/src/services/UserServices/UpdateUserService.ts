@@ -2,7 +2,7 @@ import * as Yup from "yup";
 
 import AppError from "../../errors/AppError";
 import { SerializeUser } from "../../helpers/SerializeUser";
-import ShowUserService from "./ShowUserService";
+import {ShowUserService} from "./ShowUserService";
 
 interface UpdateUserParams {
   userData: {
