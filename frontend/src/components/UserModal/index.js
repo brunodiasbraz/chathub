@@ -184,16 +184,6 @@ const UserModal = ({ open, onClose, userId }) => {
                 <div className={classes.multFieldLine}>
                   <Field
                     as={TextField}
-                    label="ID"
-                    autoFocus
-                    name="id"
-                    error={touched.id && Boolean(errors.id)}
-                    helperText={touched.id && errors.id}
-                    variant="outlined"
-                    margin="dense"                    
-                  />
-                  <Field
-                    as={TextField}
                     label={i18n.t("userModal.form.name")}
                     autoFocus
                     name="name"

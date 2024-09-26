@@ -272,6 +272,7 @@ const LoggedInLayout = ({ children }) => {
           <Typography
             component="h1"
             variant="h6"
+            style={{fontSize: 17}}
             color="secondary"
             noWrap
             className={classes.title}
