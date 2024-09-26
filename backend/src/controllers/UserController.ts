@@ -101,6 +101,7 @@ export const update = async (
   }
 
   const userData = req.body;
+  console.log(userData);
 
   const user = await UpdateUserService({ userData, userId });
 

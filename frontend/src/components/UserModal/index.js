@@ -91,6 +91,7 @@ const UserModal = ({ open, onClose, userId }) => {
 	const classes = useStyles();
 
 	const initialState = {
+		id: "",
 		name: "",
 		email: "",
 		password: "",
@@ -137,6 +138,7 @@ const UserModal = ({ open, onClose, userId }) => {
 
 	const handleSaveUser = async values => {
 		const userData = { ...values, whatsappId, queueIds: selectedQueueIds };
+		//console.log(userData);
 		try {
 			if (userId) {
 				await api.put(`/users/${userId}`, userData);
@@ -152,260 +154,287 @@ const UserModal = ({ open, onClose, userId }) => {
 	};
 
 	return (
-		<div className={classes.root}>
-			<Dialog
-				open={open}
-				onClose={handleClose}
-				maxWidth="xs"
-				fullWidth
-				scroll="paper"
-			>
-				<DialogTitle id="form-dialog-title">
-					{userId
-						? `${i18n.t("userModal.title.edit")}`
-						: `${i18n.t("userModal.title.add")}`}
-				</DialogTitle>
-				<Formik
-					initialValues={user}
-					enableReinitialize={true}
-					validationSchema={UserSchema}
-					onSubmit={(values, actions) => {
-						setTimeout(() => {
-							handleSaveUser(values);
-							actions.setSubmitting(false);
-						}, 400);
-					}}
-				>
-					{({ touched, errors, isSubmitting }) => (
-						<Form>
-							<DialogContent dividers>
-								<div className={classes.multFieldLine}>
-									<Field
-										as={TextField}
-										label={i18n.t("userModal.form.name")}
-										autoFocus
-										name="name"
-										error={touched.name && Boolean(errors.name)}
-										helperText={touched.name && errors.name}
-										variant="outlined"
-										margin="dense"
-										fullWidth
-									/>
-									<Field
-										as={TextField}
-										name="password"
-										variant="outlined"
-										margin="dense"
-										label={i18n.t("userModal.form.password")}
-										error={touched.password && Boolean(errors.password)}
-										helperText={touched.password && errors.password}
-										type={showPassword ? 'text' : 'password'}
-										InputProps={{
-											endAdornment: (
-												<InputAdornment position="end">
-													<IconButton
-														aria-label="toggle password visibility"
-														onClick={() => setShowPassword((e) => !e)}
-													>
-														{showPassword ? <VisibilityOff color="secondary" /> : <Visibility color="secondary" />}
-													</IconButton>
-												</InputAdornment>
-											)
-										}}
-										fullWidth
-									/>
-								</div>
-								<div className={classes.multFieldLine}>
-									<Field
-										as={TextField}
-										label={i18n.t("userModal.form.email")}
-										name="email"
-										error={touched.email && Boolean(errors.email)}
-										helperText={touched.email && errors.email}
-										variant="outlined"
-										margin="dense"
-										fullWidth
-									/>
-									<FormControl
-										variant="outlined"
-										className={classes.formControl}
-										margin="dense"
-									>
-										<Can
-											role={loggedInUser.profile}
-											perform="user-modal:editProfile"
-											yes={() => (
-												<>
-													<InputLabel id="profile-selection-input-label">
-														{i18n.t("userModal.form.profile")}
-													</InputLabel>
+    <div className={classes.root}>
+      <Dialog
+        open={open}
+        onClose={handleClose}
+        maxWidth="xs"
+        fullWidth
+        scroll="paper"
+      >
+        <DialogTitle id="form-dialog-title">
+          {userId
+            ? `${i18n.t("userModal.title.edit")}`
+            : `${i18n.t("userModal.title.add")}`}
+        </DialogTitle>
+        <Formik
+          initialValues={user}
+          enableReinitialize={true}
+          validationSchema={UserSchema}
+          onSubmit={(values, actions) => {
+            setTimeout(() => {
+              handleSaveUser(values);
+              actions.setSubmitting(false);
+            }, 400);
+          }}
+        >
+          {({ touched, errors, isSubmitting }) => (
+            <Form>
+              <DialogContent dividers>
+                <div className={classes.multFieldLine}>
+                  <Field
+                    as={TextField}
+                    label="ID"
+                    autoFocus
+                    name="id"
+                    error={touched.id && Boolean(errors.id)}
+                    helperText={touched.id && errors.id}
+                    variant="outlined"
+                    margin="dense"                    
+                  />
+                  <Field
+                    as={TextField}
+                    label={i18n.t("userModal.form.name")}
+                    autoFocus
+                    name="name"
+                    error={touched.name && Boolean(errors.name)}
+                    helperText={touched.name && errors.name}
+                    variant="outlined"
+                    margin="dense"
+                    fullWidth
+                  />
+                  <Field
+                    as={TextField}
+                    name="password"
+                    variant="outlined"
+                    margin="dense"
+                    label={i18n.t("userModal.form.password")}
+                    error={touched.password && Boolean(errors.password)}
+                    helperText={touched.password && errors.password}
+                    type={showPassword ? "text" : "password"}
+                    InputProps={{
+                      endAdornment: (
+                        <InputAdornment position="end">
+                          <IconButton
+                            aria-label="toggle password visibility"
+                            onClick={() => setShowPassword((e) => !e)}
+                          >
+                            {showPassword ? (
+                              <VisibilityOff color="secondary" />
+                            ) : (
+                              <Visibility color="secondary" />
+                            )}
+                          </IconButton>
+                        </InputAdornment>
+                      ),
+                    }}
+                    fullWidth
+                  />
+                </div>
+                <div className={classes.multFieldLine}>
+                  <Field
+                    as={TextField}
+                    label={i18n.t("userModal.form.email")}
+                    name="email"
+                    error={touched.email && Boolean(errors.email)}
+                    helperText={touched.email && errors.email}
+                    variant="outlined"
+                    margin="dense"
+                    fullWidth
+                  />
+                  <FormControl
+                    variant="outlined"
+                    className={classes.formControl}
+                    margin="dense"
+                  >
+                    <Can
+                      role={loggedInUser.profile}
+                      perform="user-modal:editProfile"
+                      yes={() => (
+                        <>
+                          <InputLabel id="profile-selection-input-label">
+                            {i18n.t("userModal.form.profile")}
+                          </InputLabel>
 
-													<Field
-														as={Select}
-														label={i18n.t("userModal.form.profile")}
-														name="profile"
-														labelId="profile-selection-label"
-														id="profile-selection"
-														required
-													>
-														<MenuItem value="admin">{i18n.t("userModal.form.admin")}</MenuItem>
-														<MenuItem value="user">{i18n.t("userModal.form.user")}</MenuItem>
-													</Field>
-												</>
-											)}
-										/>
-									</FormControl>
-								</div>
-								<Can
-									role={loggedInUser.profile}
-									perform="user-modal:editQueues"
-									yes={() => (
-										<QueueSelect
-											selectedQueueIds={selectedQueueIds}
-											onChange={values => setSelectedQueueIds(values)}
-										/>
-									)}
-								/>
-								<Can
-									role={loggedInUser.profile}
-									perform="user-modal:editQueues"
-									yes={() => (!loading &&
-										<FormControl variant="outlined" margin="dense" className={classes.maxWidth} fullWidth>
-											<InputLabel>{i18n.t("userModal.form.whatsapp")}</InputLabel>
-											<Field
-												as={Select}
-												value={whatsappId}
-												onChange={(e) => setWhatsappId(e.target.value)}
-												label={i18n.t("userModal.form.whatsapp")}
-											>
-												<MenuItem value={''}>&nbsp;</MenuItem>
-												{whatsApps.map((whatsapp) => (
-													<MenuItem key={whatsapp.id} value={whatsapp.id}>{whatsapp.name}</MenuItem>
-												))}
-											</Field>
-										</FormControl>
-									)}
-								/>
-								<Can
-									role={loggedInUser.profile}
-									perform="user-modal:editProfile"
-									yes={() => (!loading &&
-										<form className={classes.container} noValidate>
-											<Field
-												as={TextField}
-												label={i18n.t("userModal.form.startWork")}
-												type="time"
-												ampm={false}
-												defaultValue="00:00"
-												inputRef={startWorkRef}
-												InputLabelProps={{
-													shrink: true,
-												}}
-												inputProps={{
-													step: 600, // 5 min
-												}}
-												fullWidth
-												name="startWork"
-												error={
-													touched.startWork && Boolean(errors.startWork)
-												}
-												helperText={
-													touched.startWork && errors.startWork
-												}
-												variant="outlined"
-												margin="dense"
-												className={classes.textField}
-											/>
-											<Field
-												as={TextField}
-												label={i18n.t("userModal.form.endWork")}
-												type="time"
-												ampm={false}
-												defaultValue="23:59"
-												inputRef={endWorkRef}
-												InputLabelProps={{
-													shrink: true,
-												}}
-												inputProps={{
-													step: 600, // 5 min
-												}}
-												fullWidth
-												name="endWork"
-												error={
-													touched.endWork && Boolean(errors.endWork)
-												}
-												helperText={
-													touched.endWork && errors.endWork
-												}
-												variant="outlined"
-												margin="dense"
-												className={classes.textField}
-											/>
-										</form>
-									)}
-								/>
-								<FormControl
-									variant="outlined"
-									className={classes.formControl}
-									margin="dense"
-								>
-									<Can
-										role={loggedInUser.profile}
-										perform="user-modal:editProfile"
-										yes={() => (
-											<>
-												<InputLabel id="isTricked-selection-input-label">
-													{i18n.t("userModal.form.isTricked")}
-												</InputLabel>
+                          <Field
+                            as={Select}
+                            label={i18n.t("userModal.form.profile")}
+                            name="profile"
+                            labelId="profile-selection-label"
+                            id="profile-selection"
+                            required
+                          >
+                            <MenuItem value="admin">
+                              {i18n.t("userModal.form.admin")}
+                            </MenuItem>
+                            <MenuItem value="user">
+                              {i18n.t("userModal.form.user")}
+                            </MenuItem>
+                          </Field>
+                        </>
+                      )}
+                    />
+                  </FormControl>
+                </div>
+                <Can
+                  role={loggedInUser.profile}
+                  perform="user-modal:editQueues"
+                  yes={() => (
+                    <QueueSelect
+                      selectedQueueIds={selectedQueueIds}
+                      onChange={(values) => setSelectedQueueIds(values)}
+                    />
+                  )}
+                />
+                <Can
+                  role={loggedInUser.profile}
+                  perform="user-modal:editQueues"
+                  yes={() =>
+                    !loading && (
+                      <FormControl
+                        variant="outlined"
+                        margin="dense"
+                        className={classes.maxWidth}
+                        fullWidth
+                      >
+                        <InputLabel>
+                          {i18n.t("userModal.form.whatsapp")}
+                        </InputLabel>
+                        <Field
+                          as={Select}
+                          value={whatsappId}
+                          onChange={(e) => setWhatsappId(e.target.value)}
+                          label={i18n.t("userModal.form.whatsapp")}
+                        >
+                          <MenuItem value={""}>&nbsp;</MenuItem>
+                          {whatsApps.map((whatsapp) => (
+                            <MenuItem key={whatsapp.id} value={whatsapp.id}>
+                              {whatsapp.name}
+                            </MenuItem>
+                          ))}
+                        </Field>
+                      </FormControl>
+                    )
+                  }
+                />
+                <Can
+                  role={loggedInUser.profile}
+                  perform="user-modal:editProfile"
+                  yes={() =>
+                    !loading && (
+                      <form className={classes.container} noValidate>
+                        <Field
+                          as={TextField}
+                          label={i18n.t("userModal.form.startWork")}
+                          type="time"
+                          ampm={false}
+                          defaultValue="00:00"
+                          inputRef={startWorkRef}
+                          InputLabelProps={{
+                            shrink: true,
+                          }}
+                          inputProps={{
+                            step: 600, // 5 min
+                          }}
+                          fullWidth
+                          name="startWork"
+                          error={touched.startWork && Boolean(errors.startWork)}
+                          helperText={touched.startWork && errors.startWork}
+                          variant="outlined"
+                          margin="dense"
+                          className={classes.textField}
+                        />
+                        <Field
+                          as={TextField}
+                          label={i18n.t("userModal.form.endWork")}
+                          type="time"
+                          ampm={false}
+                          defaultValue="23:59"
+                          inputRef={endWorkRef}
+                          InputLabelProps={{
+                            shrink: true,
+                          }}
+                          inputProps={{
+                            step: 600, // 5 min
+                          }}
+                          fullWidth
+                          name="endWork"
+                          error={touched.endWork && Boolean(errors.endWork)}
+                          helperText={touched.endWork && errors.endWork}
+                          variant="outlined"
+                          margin="dense"
+                          className={classes.textField}
+                        />
+                      </form>
+                    )
+                  }
+                />
+                <FormControl
+                  variant="outlined"
+                  className={classes.formControl}
+                  margin="dense"
+                >
+                  <Can
+                    role={loggedInUser.profile}
+                    perform="user-modal:editProfile"
+                    yes={() => (
+                      <>
+                        <InputLabel id="isTricked-selection-input-label">
+                          {i18n.t("userModal.form.isTricked")}
+                        </InputLabel>
 
-												<Field
-													as={Select}
-													label={i18n.t("userModal.form.isTricked")}
-													name="isTricked"
-													labelId="isTricked-selection-label"
-													id="isTricked-selection"
-												>
-													<MenuItem value="enabled">{i18n.t("userModal.form.enabled")}</MenuItem>
-													<MenuItem value="disabled">{i18n.t("userModal.form.disabled")}</MenuItem>
-												</Field>
-											</>
-										)}
-									/>
-								</FormControl>
-							</DialogContent>
-							<DialogActions>
-								<Button
-									onClick={handleClose}
-									color="secondary"
-									disabled={isSubmitting}
-									variant="outlined"
-								>
-									{i18n.t("userModal.buttons.cancel")}
-								</Button>
-								<Button
-									type="submit"
-									color="primary"
-									disabled={isSubmitting}
-									variant="contained"
-									className={classes.btnWrapper}
-								>
-									{userId
-										? `${i18n.t("userModal.buttons.okEdit")}`
-										: `${i18n.t("userModal.buttons.okAdd")}`}
-									{isSubmitting && (
-										<CircularProgress
-											size={24}
-											className={classes.buttonProgress}
-										/>
-									)}
-								</Button>
-							</DialogActions>
-						</Form>
-					)}
-				</Formik>
-			</Dialog>
-		</div>
-	);
+                        <Field
+                          as={Select}
+                          label={i18n.t("userModal.form.isTricked")}
+                          name="isTricked"
+                          labelId="isTricked-selection-label"
+                          id="isTricked-selection"
+                        >
+                          <MenuItem value="enabled">
+                            {i18n.t("userModal.form.enabled")}
+                          </MenuItem>
+                          <MenuItem value="disabled">
+                            {i18n.t("userModal.form.disabled")}
+                          </MenuItem>
+                        </Field>
+                      </>
+                    )}
+                  />
+                </FormControl>
+              </DialogContent>
+              <DialogActions>
+                <Button
+                  onClick={handleClose}
+                  color="secondary"
+                  disabled={isSubmitting}
+                  variant="outlined"
+                >
+                  {i18n.t("userModal.buttons.cancel")}
+                </Button>
+                <Button
+                  type="submit"
+                  color="primary"
+                  disabled={isSubmitting}
+                  variant="contained"
+                  className={classes.btnWrapper}
+                >
+                  {userId
+                    ? `${i18n.t("userModal.buttons.okEdit")}`
+                    : `${i18n.t("userModal.buttons.okAdd")}`}
+                  {isSubmitting && (
+                    <CircularProgress
+                      size={24}
+                      className={classes.buttonProgress}
+                    />
+                  )}
+                </Button>
+              </DialogActions>
+            </Form>
+          )}
+        </Formik>
+      </Dialog>
+    </div>
+  );
 };
 
 export default UserModal;
