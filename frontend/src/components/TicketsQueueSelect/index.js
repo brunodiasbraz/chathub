@@ -11,14 +11,16 @@ const TicketsQueueSelect = ({
   selectedQueueIds = [],
   onChange,
 }) => {
-  const [open, setOpen] = useState(false); // Gerencia o estado do select aberto ou fechado
+  const [open, setOpen] = useState(false);
+  const [anchorEl, setAnchorEl] = useState(null); // Armazena a referência do ícone
 
-  const handleChange = e => {
+  const handleChange = (e) => {
     onChange(e.target.value);
   };
 
-  const handleClickIcon = () => {
-    setOpen(true); // Abre o select ao clicar no ícone
+  const handleClickIcon = (event) => {
+    setAnchorEl(event.currentTarget); // Define o ícone como âncora
+    setOpen(true); // Abre o select
   };
 
   const handleClose = () => {
@@ -26,9 +28,12 @@ const TicketsQueueSelect = ({
   };
 
   return (
-    <div style={{ width: 120, marginTop: -4 }}>
+    <div>
       <FormControl fullWidth margin="dense">
-        <IconButton onClick={handleClickIcon} style={{ width: "50px", borderRadius: "0%", left: "20%"}}>
+        <IconButton
+          onClick={handleClickIcon}
+          style={{padding: 0, margin: 0, borderRadius: "50%" }}
+        >
           <FilterListRounded />
         </IconButton>
         <Select
@@ -38,19 +43,19 @@ const TicketsQueueSelect = ({
           onChange={handleChange}
           open={open}
           onClose={handleClose}
-          style={{ display: open ? "block" : "none" }} // Esconde o select quando não está aberto
           MenuProps={{
+            anchorEl: anchorEl, // Posiciona o menu sobre o ícone
             anchorOrigin: {
               vertical: "bottom",
-              horizontal: "left",
+              horizontal: "center",
             },
             transformOrigin: {
               vertical: "top",
-              horizontal: "left",
+              horizontal: "center",
             },
-            getContentAnchorEl: null,
           }}
-          renderValue={() => i18n.t("ticketsQueueSelect.placeholder")}
+          renderValue={() => null}
+          style={{ display: "none" }} // Oculta o campo do select visualmente
         >
           {userQueues?.length > 0 &&
             userQueues.map(queue => (

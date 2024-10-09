@@ -165,43 +165,42 @@ const TicketsManager = () => {
           value={searchParam}
           onChange={handleSearch}
         />
-        <Paper square elevation={0} className={classes.ticketOptionsBox}>
-        <Button
-          variant="outlined"
-          color="primary"
-          style={{textTransform: "capitalize"}}
-          onClick={() => setNewTicketModalOpen(true)}
-        >
-          {i18n.t("ticketsManager.buttons.newTicket")}
-        </Button>
-        <Can
-          role={user.profile}
-          perform="tickets-manager:showall"
-          yes={() => (
-            <FormControlLabel
-              label={i18n.t("tickets.buttons.showAll")}
-              labelPlacement="start"
-              control={
-                <Switch
-                  size="small"
-                  checked={showAllTickets}
-                  onChange={() =>
-                    setShowAllTickets((prevState) => !prevState)
-                  }
-                  name="showAllTickets"
-                  color="primary"
-                />
-              }
-            />
-          )}
-        />
-        {/* <TicketsQueueSelect
-          style={{ marginLeft: 6 }}
+        <TicketsQueueSelect
           selectedQueueIds={selectedQueueIds}
           userQueues={user?.queues}
           onChange={(values) => setSelectedQueueIds(values)}
-        /> */}
-      </Paper>
+        />
+        <Paper square elevation={0} className={classes.ticketOptionsBox}>
+          <Button
+            variant="outlined"
+            color="primary"
+            style={{ textTransform: "capitalize" }}
+            onClick={() => setNewTicketModalOpen(true)}
+          >
+            {i18n.t("ticketsManager.buttons.newTicket")}
+          </Button>
+          <Can
+            role={user.profile}
+            perform="tickets-manager:showall"
+            yes={() => (
+              <FormControlLabel
+                label={i18n.t("tickets.buttons.showAll")}
+                labelPlacement="start"
+                control={
+                  <Switch
+                    size="small"
+                    checked={showAllTickets}
+                    onChange={() =>
+                      setShowAllTickets((prevState) => !prevState)
+                    }
+                    name="showAllTickets"
+                    color="primary"
+                  />
+                }
+              />
+            )}
+          />
+        </Paper>
       </Paper>
       <Paper elevation={0} square className={classes.tabsHeader}>
         <Tabs
@@ -250,11 +249,6 @@ const TicketsManager = () => {
             label={i18n.t("tickets.tabs.closed.title")}
             classes={{ root: classes.tab }}
           />
-          <TicketsQueueSelect
-          selectedQueueIds={selectedQueueIds}
-          userQueues={user?.queues}
-          onChange={(values) => setSelectedQueueIds(values)}
-        />
         </Tabs>
       </Paper>
       {/* <Paper square elevation={0} className={classes.ticketOptionsBox}>
