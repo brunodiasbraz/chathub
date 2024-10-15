@@ -58,12 +58,12 @@ const GreetingTemplatesModal = ({
   }, []);
 
   useEffect(() => {
-    if (initialValues && isMounted.current) {
-      setGreetingTemplate((prevState) => ({ ...prevState, ...initialValues }));
+    if (!greetingTemplateId) {
+      setGreetingTemplate(initialState); // Limpa o estado ao abrir um novo modal
     }
 
     (async () => {
-      if (!greetingTemplateId) return;
+      if (!greetingTemplateId) return; // Se for criação, não faz requisição
 
       setLoading(true);
       try {
@@ -80,7 +80,6 @@ const GreetingTemplatesModal = ({
         toastError(err);
       }
     })();
-    setGreetingTemplate(initialState);
   }, [greetingTemplateId, open, initialValues]);
 
 const handleSaveGreetingTemplate = async (values) => {

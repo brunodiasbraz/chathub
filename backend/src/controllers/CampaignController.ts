@@ -12,6 +12,9 @@ import { template } from "lodash";
 import AppError from "../errors/AppError";
 import { getIO } from "../libs/socket";
 import CreateGreetingTemplateService from "../services/Campaign/CreateGreetingTemplateService";
+import ShowGreetingTemplateService from "../services/Campaign/ShowGreetingTemplateService";
+import UpdateGreetingTemplateService from "../services/Campaign/UpdateGreetingTemplateService";
+import DeleteGreetingTemplateService from "../services/Campaign/DeleteGreetingTemplateService";
 
 type IndexQuery = {
   searchParam: string;
@@ -33,9 +36,13 @@ if (!apiKey) {
 }
 
 // Função para substituir o placeholder no template da saudação
-function generateGreeting(template: string, data: { name?: string }): string {
-  return template.replace("{name}", data.name || "Cliente");
+function generateGreeting(template: string, data: { name?: string, valorOriginal?: string, valorDesconto?: string }): string {
+  return template
+    .replace("{{name}}", data.name || "Cliente")
+    .replace("{{valorOriginal}}", data.valorOriginal || "0")
+    .replace("{{valorDesconto}}", data.valorDesconto || "0");
 }
+
 
 // Enviar saudação com base em um template
 export async function sendGreeting(name: string): Promise<{ status: string; message: string }> {
@@ -284,62 +291,62 @@ export const store = async (req: Request, res: Response): Promise<Response> => {
   return res.status(200).json(greetingTemplate);
 };
 
-// export const show = async (req: Request, res: Response): Promise<Response> => {
-//   const { greetingTemplateId } = req.params;
+export const show = async (req: Request, res: Response): Promise<Response> => {
+  const { greetingTemplateId } = req.params;
 
-//   const greetingTemplate = await ShowGreetingTemplateService(greetingTemplateId);
+  const greetingTemplate = await ShowGreetingTemplateService(greetingTemplateId);
 
-//   return res.status(200).json(greetingTemplate);
-// };
+  return res.status(200).json(greetingTemplate);
+};
 
-// export const update = async (
-//   req: Request,
-//   res: Response
-// ): Promise<Response> => {
-//   const greetingTemplateData: GreetingTemplateData = req.body;
+export const update = async (
+  req: Request,
+  res: Response
+): Promise<Response> => {
+  const greetingTemplateData: GreetingTemplateData = req.body;
 
-//   const schema = Yup.object().shape({
-//     template: Yup.string()
-//   });
+  const schema = Yup.object().shape({
+    template: Yup.string()
+  });
 
-//   try {
-//     await schema.validate(greetingTemplateData);
-//   } catch (err) {
-//     throw new AppError(err.message);
-//   }
+  try {
+    await schema.validate(greetingTemplateData);
+  } catch (err) {
+    throw new AppError(err.message);
+  }
 
-//   const { greetingTemplateId } = req.params;
+  const { greetingTemplateId } = req.params;
+ 
+  const greetingTemplate = await UpdateGreetingTemplateService({
+    greetingTemplateData,
+    greetingTemplateId
+  });
 
-//   const greetingTemplate = await UpdateGreetingTemplateService({
-//     greetingTemplateData,
-//     greetingTemplateId
-//   });
+  const io = getIO();
+  io.emit("greetingTemplate", {
+    action: "update",
+    greetingTemplate
+  });
 
-//   const io = getIO();
-//   io.emit("greetingTemplate", {
-//     action: "update",
-//     greetingTemplate
-//   });
+  return res.status(200).json(greetingTemplate);
+};
 
-//   return res.status(200).json(greetingTemplate);
-// };
+export const remove = async (
+  req: Request,
+  res: Response
+): Promise<Response> => {
+  const { greetingTemplateId } = req.params;
 
-// export const remove = async (
-//   req: Request,
-//   res: Response
-// ): Promise<Response> => {
-//   const { greetingTemplateId } = req.params;
+  await DeleteGreetingTemplateService(greetingTemplateId);
 
-//   await DeleteGreetingTemplateService(greetingTemplateId);
+  const io = getIO();
+  io.emit("greetingTemplate", {
+    action: "delete",
+    greetingTemplateId
+  });
 
-//   const io = getIO();
-//   io.emit("greetingTemplate", {
-//     action: "delete",
-//     greetingTemplateId
-//   });
-
-//   return res.status(200).json({ message: "Quick Answer deleted" });
-// };
+  return res.status(200).json({ message: "Greeting template deleted" });
+};
 
 // export const removeAll = async (
 //   req: Request,

@@ -1,16 +1,16 @@
-import QuickAnswer from "../../models/QuickAnswer";
+import GreetingTemplates from "../../models/GreetingTemplates";
 import AppError from "../../errors/AppError";
 
-const DeleteQuickAnswerService = async (id: string): Promise<void> => {
-  const quickAnswer = await QuickAnswer.findOne({
+const DeleteGreetingTemplateService = async (id: string): Promise<void> => {
+  const greetingTemplate = await GreetingTemplates.findOne({
     where: { id }
   });
 
-  if (!quickAnswer) {
-    throw new AppError("ERR_NO_QUICK_ANSWER_FOUND", 404);
+  if (!greetingTemplate) {
+    throw new AppError("ERR_NO_GREETING_TEMPLATE_FOUND", 404);
   }
 
-  await quickAnswer.destroy();
+  await greetingTemplate.destroy();
 };
 
-export default DeleteQuickAnswerService;
+export default DeleteGreetingTemplateService;

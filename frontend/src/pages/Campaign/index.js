@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import api from "../../services/api";
 import MainContainer from "../../components/MainContainer";
 import MainHeader from "../../components/MainHeader";
 import MainHeaderButtonsWrapper from "../../components/MainHeaderButtonsWrapper";
@@ -7,10 +8,10 @@ import Title from "../../components/Title";
 import { i18n } from "../../translate/i18n";
 
 import GreetingTemplatesModal from "../../components/GreetingTemplatesModal";
-// import ConfirmationModal from "../../components/ConfirmationModal";
+import ConfirmationModal from "../../components/ConfirmationModal";
 
-// import { toast } from "react-toastify";
-// import toastError from "../../errors/toastError";
+import { toast } from "react-toastify";
+import toastError from "../../errors/toastError";
 
 import { AddCircleOutline, DeleteOutline, Edit } from "@material-ui/icons";
 import {
@@ -112,7 +113,10 @@ const Campaign = () => {
   const [value, setValue] = useState(0);
   const [newTemplateModalOpen, setNewTemplateModalOpen] = useState(false);
   const [greetingTemplates, setGreetingTemplates] = useState([]);
-    const [newTemplateData, setNewTemplateData] = useState({
+  const [deletingGreetingTemplates, setDeletingGreetingTemplates] =
+    useState(null);
+  const [confirmModalOpen, setConfirmModalOpen] = useState(false);
+  const [newTemplateData, setNewTemplateData] = useState({
       template: "",
       status: "1",
     });
@@ -121,9 +125,7 @@ const Campaign = () => {
   useEffect(() => {
     const fetchTemplates = async () => {
       try {
-        const response = await axios.get(
-          `${process.env.REACT_APP_BACKEND_URL}/campaign`
-        );
+        const response = await api.get(`/campaign`);
         setGreetingTemplates(response.data);
       } catch (error) {
         console.error("Erro ao carregar templates:", error);
@@ -137,12 +139,26 @@ const Campaign = () => {
     setValue(newValue);
   };
 
-  const handleOpenNewTemplateModal = () => {
+  const handleOpenNewTemplateModal = (id) => {
+    setNewTemplateData({ id });
     setNewTemplateModalOpen(true);
   };
 
+
   const handleCloseNewTemplateModal = () => {
     setNewTemplateModalOpen(false);
+  };
+
+  const handleDeleteGreetingTemplate = async (greetingTemplateId) => {
+      try {
+        await api.delete(`/greetingTemplates/${greetingTemplateId}`);
+        toast.success(i18n.t("campaign.toasts.deleted"));
+      } catch (err) {
+        toastError(err);
+      }
+      setDeletingGreetingTemplates(null);
+      //setSearchParam("");
+      //setPageNumber(1);
   };
 
 const handleSaveToTable = (newData) => {
@@ -162,6 +178,26 @@ const handleSaveToTable = (newData) => {
   return (
     <div className={classes.root}>
       <MainContainer>
+        <ConfirmationModal
+          title={
+            deletingGreetingTemplates
+              ? `${i18n.t("campaign.confirmationModal.deleteTitle")}: ${
+                  deletingGreetingTemplates.template
+                }?`
+              : `${i18n.t("campaign.confirmationModal.deleteAllTitle")}`
+          }
+          open={confirmModalOpen}
+          onClose={setConfirmModalOpen}
+          onConfirm={() =>
+            deletingGreetingTemplates
+              ? handleDeleteGreetingTemplate(deletingGreetingTemplates.id)
+              : handleDeleteGreetingTemplate(deletingGreetingTemplates.id)
+          }
+        >
+          {deletingGreetingTemplates
+            ? `${i18n.t("campaign.confirmationModal.deleteMessage")}`
+            : `${i18n.t("campaign.confirmationModal.deleteAllMessage")}`}
+        </ConfirmationModal>
         <MainHeader>
           <Title>{i18n.t("campaign.title")}</Title>
         </MainHeader>
@@ -222,10 +258,21 @@ const handleSaveToTable = (newData) => {
                         {template.status ? "Ativo" : "Inativo"}
                       </TableCell>
                       <TableCell align="center">
-                        <IconButton size="small">
+                        <IconButton
+                          size="small"
+                          onClick={() =>
+                            handleOpenNewTemplateModal(template.id)
+                          }
+                        >
                           <Edit color="secondary" />
                         </IconButton>
-                        <IconButton size="small">
+                        <IconButton
+                          size="small"
+                          onClick={(e) => {
+                            setConfirmModalOpen(true);
+                            setDeletingGreetingTemplates(template);
+                          }}
+                        >
                           <DeleteOutline color="secondary" />
                         </IconButton>
                       </TableCell>

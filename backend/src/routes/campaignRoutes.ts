@@ -13,9 +13,9 @@ campaignRoutes.post("/send-messages", CampaignController.sendMessagesToBase); //
 campaignRoutes.post("/send-greeting", CampaignController.sendGreetingMessage); // Rota chamada a partir da 2ª etapa
 
 campaignRoutes.post("/greetingTemplates", isAuth, CampaignController.store);
-// campaignRoutes.get("/greetingTemplates/:greetingTemplateId", isAuth, QuickAnswerController.show);
-// campaignRoutes.put("/quickAnswers/:quickAnswerId", isAuth, QuickAnswerController.update);
-// campaignRoutes.delete("/quickAnswers/:quickAnswerId", isAuth, QuickAnswerController.remove);
+campaignRoutes.get("/greetingTemplates/:greetingTemplateId", isAuth, CampaignController.show);
+campaignRoutes.put("/greetingTemplates/:greetingTemplateId", isAuth, CampaignController.update);
+campaignRoutes.delete("/greetingTemplates/:greetingTemplateId", isAuth, CampaignController.remove);
 // campaignRoutes.delete("/quickAnswers", isAuth, QuickAnswerController.removeAll);
 
 

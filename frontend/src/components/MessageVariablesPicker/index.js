@@ -20,42 +20,50 @@ const MessageVariablesPicker = ({ onClick, disabled }) => {
     };
 
     const msgVars = [
-        {
-            name: i18n.t("messageVariablesPicker.vars.contactName"),
-            value: "{{name}} "
-        },
-        {
-            name: i18n.t("messageVariablesPicker.vars.user"),
-            value: "{{user.name}} "
-        },
-        {
-            name: i18n.t("messageVariablesPicker.vars.greeting"),
-            value: "{{ms}} "
-        },
-        {
-            name: i18n.t("messageVariablesPicker.vars.protocolNumber"),
-            value: "{{protocol}} "
-        },
-        {
-            name: i18n.t("messageVariablesPicker.vars.date"),
-            value: "{{date}} "
-        },
-        {
-            name: i18n.t("messageVariablesPicker.vars.hour"),
-            value: "{{hour}} "
-        },
-        {
-            name: i18n.t("messageVariablesPicker.vars.ticket_id"),
-            value: "{{ticket_id}} "
-        },
-        {
-            name: i18n.t("messageVariablesPicker.vars.queue"),
-            value: "{{queue}} "
-        },
-        {
-            name: i18n.t("messageVariablesPicker.vars.connection"),
-            value: "{{connection}} "
-        }
+      {
+        name: i18n.t("messageVariablesPicker.vars.contactName"),
+        value: "{{name}} ",
+      },
+      {
+        name: i18n.t("messageVariablesPicker.vars.user"),
+        value: "{{user.name}} ",
+      },
+      {
+        name: i18n.t("messageVariablesPicker.vars.valorOriginal"),
+        value: "{{valorOriginal}} ",
+      },
+      {
+        name: i18n.t("messageVariablesPicker.vars.valorDesconto"),
+        value: "{{valorDesconto}} ",
+      },
+      // {
+      //     name: i18n.t("messageVariablesPicker.vars.greeting"),
+      //     value: "{{ms}} "
+      // },
+      // {
+      //     name: i18n.t("messageVariablesPicker.vars.protocolNumber"),
+      //     value: "{{protocol}} "
+      // },
+      // {
+      //     name: i18n.t("messageVariablesPicker.vars.date"),
+      //     value: "{{date}} "
+      // },
+      // {
+      //     name: i18n.t("messageVariablesPicker.vars.hour"),
+      //     value: "{{hour}} "
+      // },
+      // {
+      //     name: i18n.t("messageVariablesPicker.vars.ticket_id"),
+      //     value: "{{ticket_id}} "
+      // },
+      // {
+      //     name: i18n.t("messageVariablesPicker.vars.queue"),
+      //     value: "{{queue}} "
+      // },
+      // {
+      //     name: i18n.t("messageVariablesPicker.vars.connection"),
+      //     value: "{{connection}} "
+      // }
     ];
 
     return (

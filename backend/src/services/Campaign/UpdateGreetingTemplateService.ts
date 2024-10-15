@@ -1,40 +1,40 @@
-import QuickAnswer from "../../models/QuickAnswer";
+import GreetingTemplates from "../../models/GreetingTemplates";
 import AppError from "../../errors/AppError";
 
-interface QuickAnswerData {
-  shortcut?: string;
-  message?: string;
+interface GreetingTemplateData {
+  template?: string;
 }
 
 interface Request {
-  quickAnswerData: QuickAnswerData;
-  quickAnswerId: string;
+  greetingTemplateData: GreetingTemplateData;
+  greetingTemplateId: string;
 }
 
-const UpdateQuickAnswerService = async ({
-  quickAnswerData,
-  quickAnswerId
-}: Request): Promise<QuickAnswer> => {
-  const { shortcut, message } = quickAnswerData;
+const UpdateGreetingTemplateService = async ({
+  greetingTemplateData,
+  greetingTemplateId
+}: Request): Promise<GreetingTemplates> => {
+  
+ 
+  const { template } = greetingTemplateData;
 
-  const quickAnswer = await QuickAnswer.findOne({
-    where: { id: quickAnswerId },
-    attributes: ["id", "shortcut", "message"]
+  const greetingTemplates = await GreetingTemplates.findOne({
+    where: { id: greetingTemplateId }
   });
 
-  if (!quickAnswer) {
-    throw new AppError("ERR_NO_QUICK_ANSWERS_FOUND", 404);
+
+  if (!greetingTemplates) {
+    throw new AppError("ERR_NO_GREETING_TEMPLATE_FOUND", 404);
   }
-  await quickAnswer.update({
-    shortcut,
-    message
+  await greetingTemplates.update({
+    template
   });
 
-  await quickAnswer.reload({
-    attributes: ["id", "shortcut", "message"]
+  await greetingTemplates.reload({
+    attributes: ["id"]
   });
 
-  return quickAnswer;
+  return greetingTemplates;
 };
 
-export default UpdateQuickAnswerService;
+export default UpdateGreetingTemplateService;

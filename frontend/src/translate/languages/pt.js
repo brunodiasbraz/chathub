@@ -47,6 +47,8 @@ const messages = {
           ticket_id: "Ticked ID",
           queue: "Setor",
           connection: "Conexão",
+          valorOriginal: "Valor Original",
+          valorDesconto: "Valor com Desconto",
         },
       },
       dashboard: {
@@ -439,6 +441,15 @@ const messages = {
           text: "Templates de mensagens",
           tooltip:
             "Aqui você encontra todos os modelos de mensagens disponíveis para disparo da campanha.",
+        },
+        toasts: {
+          deleted: "Template de saudação excluído com sucesso!",
+          deletedAll: "Todos os Templates de saudação excluídos com sucesso!",
+        },
+        confirmationModal: {
+          deleteTitle: "Excluir",
+          deleteMessage:
+            "Tem certeza que deseja excluir esta saudação? Esta ação não poderá ser revertida.",
         },
         add: "Novo Template",
         greetingTemplatesModal: {
