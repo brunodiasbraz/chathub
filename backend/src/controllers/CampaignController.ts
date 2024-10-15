@@ -3,9 +3,25 @@ import Base_Numbers from "../models/BaseNumbers";
 import Arquivos from "../models/Arquivos";
 import axios, { AxiosResponse } from "axios";
 import path from "path";
+import * as Yup from "yup";
 import fs from "fs";
 import csv from "csv-parser";
 import { Request, Response } from "express";
+import ListTemplatesService from "../services/Campaign/ListTemplatesService";
+import { template } from "lodash";
+import AppError from "../errors/AppError";
+import { getIO } from "../libs/socket";
+import CreateGreetingTemplateService from "../services/Campaign/CreateGreetingTemplateService";
+
+type IndexQuery = {
+  searchParam: string;
+  pageNumber: string;
+};
+
+interface GreetingTemplateData {
+  template: string;
+  status: number;
+}
 
 // Variáveis de ambiente
 const apiKey: string | undefined = process.env.API_KEY_PRESSTICKET;
@@ -232,3 +248,106 @@ export const sendMessagesToBase = async (req: Request, res: Response) => {
     return res.status(500).send("Erro ao enviar mensagens: " + error.message);
   }
 };
+
+/**Função para pegar todos os Templates de Saudações no banco*/
+export const index = async (req: Request, res: Response): Promise<Response> => {
+  
+  const greetingTemplates = await ListTemplatesService();
+
+  return res.json(greetingTemplates);
+};
+
+export const store = async (req: Request, res: Response): Promise<Response> => {
+  const newGreetingTemplate: GreetingTemplateData = req.body;
+
+  const GreetingTemplateSchema = Yup.object().shape({
+    template: Yup.string().required(),
+    status: Yup.number().required()
+  });
+
+  try {
+    await GreetingTemplateSchema.validate(newGreetingTemplate);
+  } catch (err) {
+    throw new AppError(err.message);
+  }
+
+  const greetingTemplate = await CreateGreetingTemplateService({
+    ...newGreetingTemplate
+  });
+
+  const io = getIO();
+  io.emit("greetingTemplate", {
+    action: "create",
+    greetingTemplate
+  });
+
+  return res.status(200).json(greetingTemplate);
+};
+
+// export const show = async (req: Request, res: Response): Promise<Response> => {
+//   const { greetingTemplateId } = req.params;
+
+//   const greetingTemplate = await ShowGreetingTemplateService(greetingTemplateId);
+
+//   return res.status(200).json(greetingTemplate);
+// };
+
+// export const update = async (
+//   req: Request,
+//   res: Response
+// ): Promise<Response> => {
+//   const greetingTemplateData: GreetingTemplateData = req.body;
+
+//   const schema = Yup.object().shape({
+//     template: Yup.string()
+//   });
+
+//   try {
+//     await schema.validate(greetingTemplateData);
+//   } catch (err) {
+//     throw new AppError(err.message);
+//   }
+
+//   const { greetingTemplateId } = req.params;
+
+//   const greetingTemplate = await UpdateGreetingTemplateService({
+//     greetingTemplateData,
+//     greetingTemplateId
+//   });
+
+//   const io = getIO();
+//   io.emit("greetingTemplate", {
+//     action: "update",
+//     greetingTemplate
+//   });
+
+//   return res.status(200).json(greetingTemplate);
+// };
+
+// export const remove = async (
+//   req: Request,
+//   res: Response
+// ): Promise<Response> => {
+//   const { greetingTemplateId } = req.params;
+
+//   await DeleteGreetingTemplateService(greetingTemplateId);
+
+//   const io = getIO();
+//   io.emit("greetingTemplate", {
+//     action: "delete",
+//     greetingTemplateId
+//   });
+
+//   return res.status(200).json({ message: "Quick Answer deleted" });
+// };
+
+// export const removeAll = async (
+//   req: Request,
+//   res: Response
+// ): Promise<Response> => {
+//   const { greetingTemplateId } = req.params;
+
+//   await DeleteAllGreetingTemplateService();
+
+//   return res.status(200).json({ message: "All Quick Answer deleted" });
+// };

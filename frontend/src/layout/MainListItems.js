@@ -30,6 +30,8 @@ import {
   WhatsApp,
   EmojiFlagsRounded,
   ViewArray,
+  ExpandLess,
+  ExpandMore
 } from "@material-ui/icons";
 
 import { i18n } from "../translate/i18n";
@@ -66,6 +68,11 @@ const useStyles = makeStyles((theme) => ({
     paddingLeft: theme.spacing(2),
     paddingRight: theme.spacing(2),
   },
+  listItemText: {
+  display: "flex",
+  alignItems: "center",
+}
+
 }));
 
 function ListItemLink(props) {
@@ -251,6 +258,7 @@ const isActive = (path) => {
             />
 
             {/* Item principal "API" */}
+
             <ListItem
               button
               onClick={handleClick}
@@ -262,6 +270,13 @@ const isActive = (path) => {
                 primary={i18n.t("mainDrawer.listItems.apititle")}
                 icon={<Code />}
               />
+              <>
+                {open ? (
+                  <ExpandLess style={{ marginLeft: 8, padding: 2 }} />
+                ) : (
+                  <ExpandMore style={{ marginLeft: 8, padding: 2 }} />
+                )}
+              </>
             </ListItem>
 
             {/* Lista de subitens */}

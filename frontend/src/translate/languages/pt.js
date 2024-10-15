@@ -1,3 +1,5 @@
+import GreetingTemplatesModal from "../../components/GreetingTemplatesModal";
+
 const messages = {
   pt: {
     translations: {
@@ -44,20 +46,20 @@ const messages = {
           hour: "Hora",
           ticket_id: "Ticked ID",
           queue: "Setor",
-          connection: "Conexão"
-        }
+          connection: "Conexão",
+        },
       },
       dashboard: {
         messages: {
           inAttendance: {
-            title: "Em Atendimento"
+            title: "Em Atendimento",
           },
           waiting: {
-            title: "Aguardando"
+            title: "Aguardando",
           },
           closed: {
-            title: "Resolvido"
-          }
+            title: "Resolvido",
+          },
         },
         charts: {
           perDay: {
@@ -66,8 +68,8 @@ const messages = {
         },
         tags: {
           cloudTitle: "Tags: ",
-          noTags: "Sem tags no momento!"
-        }
+          noTags: "Sem tags no momento!",
+        },
       },
       connections: {
         title: "Conexões",
@@ -78,7 +80,8 @@ const messages = {
           deleteTitle: "Deletar",
           deleteMessage: "Você tem certeza? Essa ação não pode ser revertida.",
           disconnectTitle: "Desconectar",
-          disconnectMessage: "Tem certeza? Você precisará ler o QR Code novamente.",
+          disconnectMessage:
+            "Tem certeza? Você precisará ler o QR Code novamente.",
         },
         buttons: {
           add: "Adicionar WhatsApp",
@@ -92,18 +95,21 @@ const messages = {
         toolTips: {
           disconnected: {
             title: "Falha ao iniciar sessão do WhatsApp",
-            content: "Certifique-se de que seu celular esteja conectado à internet e tente novamente, ou solicite um novo QR Code",
+            content:
+              "Certifique-se de que seu celular esteja conectado à internet e tente novamente, ou solicite um novo QR Code",
           },
           qrcode: {
             title: "Esperando leitura do QR Code",
-            content: "Clique no botão 'QR CODE' e leia o QR Code com o seu celular para iniciar a sessão",
+            content:
+              "Clique no botão 'QR CODE' e leia o QR Code com o seu celular para iniciar a sessão",
           },
           connected: {
             title: "Conexão estabelecida!",
           },
           timeout: {
             title: "A conexão com o celular foi perdida",
-            content: "Certifique-se de que seu celular esteja conectado à internet e o WhatsApp esteja aberto, ou clique no botão 'Desconectar' para obter um novo QR Code",
+            content:
+              "Certifique-se de que seu celular esteja conectado à internet e o WhatsApp esteja aberto, ou clique no botão 'Desconectar' para obter um novo QR Code",
           },
         },
         table: {
@@ -126,7 +132,7 @@ const messages = {
           name: "Nome",
           default: "Padrão",
           display: "Exibir horário dos setores",
-          farewellMessage: "Mensagem de despedida"
+          farewellMessage: "Mensagem de despedida",
         },
         buttons: {
           okAdd: "Adicionar",
@@ -149,15 +155,17 @@ const messages = {
           deleteTitle: "Deletar ",
           deleteAllTitle: "Deletar Todos",
           importTitle: "Importar contatos",
-          deleteMessage: "Tem certeza que deseja deletar este contato? Todos os tickets relacionados serão perdidos.",
-          deleteAllMessage: "Tem certeza que deseja deletar todos os contatos? Todos os tickets relacionados serão perdidos.",
+          deleteMessage:
+            "Tem certeza que deseja deletar este contato? Todos os tickets relacionados serão perdidos.",
+          deleteAllMessage:
+            "Tem certeza que deseja deletar todos os contatos? Todos os tickets relacionados serão perdidos.",
           importMessage: "Deseja importar todos os contatos do telefone?",
         },
         buttons: {
           import: "Importar Contatos",
           add: "Adicionar Contato",
           export: "Exportar Contatos",
-          delete: "Excluir Todos Contatos"
+          delete: "Excluir Todos Contatos",
         },
         table: {
           name: "Nome",
@@ -210,7 +218,7 @@ const messages = {
           name: "Tags",
           color: "Cor",
           contacts: "Contatos",
-          actions: "Ação"
+          actions: "Ação",
         },
         toasts: {
           deleted: "Tag excluída com sucesso!",
@@ -239,7 +247,7 @@ const messages = {
         },
         form: {
           name: "Nome da Tag",
-          color: "Cor da Tag"
+          color: "Cor da Tag",
         },
         success: "Tag salva com sucesso!",
       },
@@ -282,7 +290,7 @@ const messages = {
           endWork: "Termino",
           isTricked: "Ver Contatos",
           enabled: "Habilitado",
-          disabled: "Desabilitado"
+          disabled: "Desabilitado",
         },
         buttons: {
           okAdd: "Adicionar",
@@ -292,12 +300,14 @@ const messages = {
         success: "Atendente salvo com sucesso.",
       },
       chat: {
-        noTicketMessage: "Selecione um ticket para começar a conversar ou clique em novo para iniciar uma nova conversa!",
+        noTicketMessage:
+          "Selecione um ticket para começar a conversar ou clique em novo para iniciar uma nova conversa!",
       },
       uploads: {
         titles: {
-          titleUploadMsgDragDrop: "⬇️ ARRASTE E SOLTE ARQUIVOS NO CAMPO ABAIXO ⬇️",
-          titleFileList: "Lista de arquivo(s)"
+          titleUploadMsgDragDrop:
+            "⬇️ ARRASTE E SOLTE ARQUIVOS NO CAMPO ABAIXO ⬇️",
+          titleFileList: "Lista de arquivo(s)",
         },
       },
       ticketsManager: {
@@ -343,7 +353,8 @@ const messages = {
         pendingHeader: "Aguardando",
         assignedHeader: "Atendendo",
         noTicketsTitle: "Nada aqui!",
-        noTicketsMessage: "Nenhum ticket encontrado com esse status ou termo pesquisado",
+        noTicketsMessage:
+          "Nenhum ticket encontrado com esse status ou termo pesquisado",
         connectionTitle: "Conexão que está sendo utilizada atualmente.",
         items: {
           queueless: "Sem Setor",
@@ -355,17 +366,17 @@ const messages = {
           connection: "Conexão",
           user: "Atendente",
           queue: "Setor",
-          tags: "Tags"
+          tags: "Tags",
         },
         buttons: {
           accept: "Responder",
           acceptBeforeBot: "Aceitar",
           start: "iniciar",
-          cancel: "Cancelar"
+          cancel: "Cancelar",
         },
         acceptModal: {
           title: "Aceitar Chat",
-          queue: "Selecionar setor"
+          queue: "Selecionar setor",
         },
       },
       newTicketModal: {
@@ -408,12 +419,12 @@ const messages = {
           apidocs: "Documentação",
           apititle: "API",
           apikey: "API Key",
-          token: "Token"
+          token: "Token",
         },
         appBar: {
           message: {
             hi: "Olá",
-            text: "seja bem vindo ao"
+            text: "seja bem vindo ao",
           },
           user: {
             profile: "Perfil",
@@ -421,6 +432,33 @@ const messages = {
           },
         },
       },
+
+      campaign: {
+        title: "Campanhas",
+        templates: {
+          text: "Templates de mensagens",
+          tooltip:
+            "Aqui você encontra todos os modelos de mensagens disponíveis para disparo da campanha.",
+        },
+        add: "Novo Template",
+        greetingTemplatesModal: {
+          title: {
+            add: "Adicionar novo template de saudação",
+            edit: "Editar template de saudação",
+          },
+          form: {
+            message: "Mensagem de saudação",
+            status: "Ativar template de saudação?",
+          },
+          buttons: {
+            okAdd: "Adicionar",
+            okEdit: "Salvar",
+            cancel: "Cancelar",
+          },
+          success: "Mensagem de saudação para campanha salva com sucesso.",
+        },
+      },
+
       notifications: {
         noTickets: "Nenhuma notificação.",
       },
@@ -443,7 +481,8 @@ const messages = {
         },
         confirmationModal: {
           deleteTitle: "Excluir",
-          deleteMessage: "Você tem certeza? Essa ação não pode ser revertida! Os tickets desse setor continuarão existindo, mas não terão mais nenhuma setor atribuído.",
+          deleteMessage:
+            "Você tem certeza? Essa ação não pode ser revertida! Os tickets desse setor continuarão existindo, mas não terão mais nenhuma setor atribuído.",
         },
       },
       queueSelect: {
@@ -466,8 +505,10 @@ const messages = {
         },
         searchPlaceholder: "Pesquisar...",
         confirmationModal: {
-          deleteTitle: "Você tem certeza que quer excluir esta Resposta Rápida: ",
-          deleteAllTitle: "Você tem certeza que quer excluir todas Respostas Rápidas?",
+          deleteTitle:
+            "Você tem certeza que quer excluir esta Resposta Rápida: ",
+          deleteAllTitle:
+            "Você tem certeza que quer excluir todas Respostas Rápidas?",
           deleteMessage: "Esta ação não pode ser revertida.",
           deleteAllMessage: "Esta ação não pode ser revertida.",
         },
@@ -489,11 +530,12 @@ const messages = {
         },
         toasts: {
           deleted: "Atendente excluído com sucesso.",
-          updated: "Atendente atualizado com sucesso."
+          updated: "Atendente atualizado com sucesso.",
         },
         confirmationModal: {
           deleteTitle: "Excluir",
-          deleteMessage: "Todos os dados do atendente serão perdidos. Os tickets abertos deste atendente serão movidos para a espera.",
+          deleteMessage:
+            "Todos os dados do atendente serão perdidos. Os tickets abertos deste atendente serão movidos para a espera.",
         },
       },
       integrations: {
@@ -503,12 +545,12 @@ const messages = {
           openai: {
             title: "OpenAI",
             organization: "Organization ID",
-            apikey: "KEY"
+            apikey: "KEY",
           },
           n8n: {
             title: "N8N",
-            urlApiN8N: "URL API N8N"
-          }
+            urlApiN8N: "URL API N8N",
+          },
         },
       },
       settings: {
@@ -591,19 +633,19 @@ const messages = {
             name: "Cria novo ticket após",
             note: "Selecione o tempo que será necessário para abrir um novo ticket, caso o cliente entre em contatos novamente",
             options: {
-              "10": "10 Segundos",
-              "30": "30 Segundos",
-              "60": "1 minuto",
-              "300": "5 minutos",
-              "1800": "30 minutos",
-              "3600": "1 hora",
-              "7200": "2 horas",
-              "21600": "6 horas",
-              "43200": "12 horas",
-              "86400": "24 horas",
-              "604800": "7 dias",
-              "1296000": "15 dias",
-              "2592000": "30 dias",
+              10: "10 Segundos",
+              30: "30 Segundos",
+              60: "1 minuto",
+              300: "5 minutos",
+              1800: "30 minutos",
+              3600: "1 hora",
+              7200: "2 horas",
+              21600: "6 horas",
+              43200: "12 horas",
+              86400: "24 horas",
+              604800: "7 dias",
+              1296000: "15 dias",
+              2592000: "30 dias",
             },
           },
         },
@@ -621,7 +663,8 @@ const messages = {
       },
       messagesInput: {
         placeholderOpen: "Digite uma mensagem",
-        placeholderClosed: "Reabra ou aceite esse ticket para enviar uma mensagem.",
+        placeholderClosed:
+          "Reabra ou aceite esse ticket para enviar uma mensagem.",
         signMessage: "Assinar",
       },
       contactDrawer: {
@@ -633,7 +676,7 @@ const messages = {
       },
       copyToClipboard: {
         copy: "Copiar",
-        copied: "Copiado"
+        copied: "Copiado",
       },
       ticketOptionsMenu: {
         delete: "Deletar",
@@ -641,7 +684,8 @@ const messages = {
         confirmationModal: {
           title: "Deletar o ticket ",
           titleFrom: "do contato ",
-          message: "Atenção! Todas as mensagens relacionadas ao ticket serão perdidas.",
+          message:
+            "Atenção! Todas as mensagens relacionadas ao ticket serão perdidas.",
         },
         buttons: {
           delete: "Excluir",
@@ -664,17 +708,24 @@ const messages = {
       },
       backendErrors: {
         ERR_NO_OTHER_WHATSAPP: "Deve haver pelo menos um WhatsApp padrão.",
-        ERR_NO_DEF_WAPP_FOUND: "Nenhum WhatsApp padrão encontrado. Verifique a página de conexões.",
-        ERR_WAPP_NOT_INITIALIZED: "Esta sessão do WhatsApp não foi inicializada. Verifique a página de conexões.",
-        ERR_WAPP_CHECK_CONTACT: "Não foi possível verificar o contato do WhatsApp. Verifique a página de conexões",
+        ERR_NO_DEF_WAPP_FOUND:
+          "Nenhum WhatsApp padrão encontrado. Verifique a página de conexões.",
+        ERR_WAPP_NOT_INITIALIZED:
+          "Esta sessão do WhatsApp não foi inicializada. Verifique a página de conexões.",
+        ERR_WAPP_CHECK_CONTACT:
+          "Não foi possível verificar o contato do WhatsApp. Verifique a página de conexões",
         ERR_WAPP_INVALID_CONTACT: "Este não é um número de Whatsapp válido.",
-        ERR_WAPP_DOWNLOAD_MEDIA: "Não foi possível baixar mídia do WhatsApp. Verifique a página de conexões.",
-        ERR_INVALID_CREDENTIALS: "Erro de autenticação. Por favor, tente novamente.",
-        ERR_SENDING_WAPP_MSG: "Erro ao enviar mensagem do WhatsApp. Verifique a página de conexões.",
+        ERR_WAPP_DOWNLOAD_MEDIA:
+          "Não foi possível baixar mídia do WhatsApp. Verifique a página de conexões.",
+        ERR_INVALID_CREDENTIALS:
+          "Erro de autenticação. Por favor, tente novamente.",
+        ERR_SENDING_WAPP_MSG:
+          "Erro ao enviar mensagem do WhatsApp. Verifique a página de conexões.",
         ERR_DELETE_WAPP_MSG: "Não foi possível excluir a mensagem do WhatsApp.",
         ERR_OTHER_OPEN_TICKET: "Já existe um ticket aberto para este contato.",
         ERR_SESSION_EXPIRED: "Sessão expirada. Por favor entre.",
-        ERR_USER_CREATION_DISABLED: "A criação do atendente foi desabilitada pelo administrador.",
+        ERR_USER_CREATION_DISABLED:
+          "A criação do atendente foi desabilitada pelo administrador.",
         ERR_NO_PERMISSION: "Você não tem permissão para acessar este recurso.",
         ERR_DUPLICATED_CONTACT: "Já existe um contato com este número.",
         ERR_NO_SETTING_FOUND: "Nenhuma configuração encontrada com este ID.",
@@ -684,16 +735,22 @@ const messages = {
         ERR_NO_WAPP_FOUND: "Nenhum WhatsApp encontrado com este ID.",
         ERR_CREATING_MESSAGE: "Erro ao criar mensagem no banco de dados.",
         ERR_CREATING_TICKET: "Erro ao criar ticket no banco de dados.",
-        ERR_FETCH_WAPP_MSG: "Erro ao buscar a mensagem no WhatsApp, talvez ela seja muito antiga.",
-        ERR_QUEUE_COLOR_ALREADY_EXISTS: "Esta cor já está em uso, escolha outra.",
-        ERR_WAPP_GREETING_REQUIRED: "A mensagem de saudação é obrigatório quando há mais de um Setor.",
-        ERR_USER_CREATION_COUNT: "Limite de atendentes atingido, para alterar entre em contato com o suporte.",
-        ERR_CONNECTION_CREATION_COUNT: "Limite de conexões atingido, para alterar entre em contato com o suporte.",
+        ERR_FETCH_WAPP_MSG:
+          "Erro ao buscar a mensagem no WhatsApp, talvez ela seja muito antiga.",
+        ERR_QUEUE_COLOR_ALREADY_EXISTS:
+          "Esta cor já está em uso, escolha outra.",
+        ERR_WAPP_GREETING_REQUIRED:
+          "A mensagem de saudação é obrigatório quando há mais de um Setor.",
+        ERR_USER_CREATION_COUNT:
+          "Limite de atendentes atingido, para alterar entre em contato com o suporte.",
+        ERR_CONNECTION_CREATION_COUNT:
+          "Limite de conexões atingido, para alterar entre em contato com o suporte.",
         ERR_NO_TAG_FOUND: "Tag não encontrada.",
         ERR_OUT_OF_HOURS: "Fora do Horário de Expediente!",
-        ERR_OPEN_USER_TICKET: "Já existe um ticket aberto para este contato com ",
+        ERR_OPEN_USER_TICKET:
+          "Já existe um ticket aberto para este contato com ",
         ERR_NONE_USER_TICKET: "Já existe um ticket aberto para este contato.",
-        ERR_NO_INTEGRATION_FOUND: "Integração não encontrada."
+        ERR_NO_INTEGRATION_FOUND: "Integração não encontrada.",
       },
     },
   },

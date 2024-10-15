@@ -18,6 +18,9 @@ class Greeting_Template extends Model<Greeting_Template> {
   @Column
   template: string;
 
+  @Column
+  status: number;
+
   @CreatedAt
   createdAt: Date;
 
