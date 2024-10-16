@@ -1,4 +1,5 @@
 import GreetingTemplatesModal from "../../components/GreetingTemplatesModal";
+import NewCampaignModal from "../../components/NewCampaignModal";
 
 const messages = {
   pt: {
@@ -437,6 +438,7 @@ const messages = {
 
       campaign: {
         title: "Campanhas",
+        addCampaign: "Criar nova campanha",
         templates: {
           text: "Templates de mensagens",
           tooltip:
@@ -469,7 +471,12 @@ const messages = {
           success: "Mensagem de saudação para campanha salva com sucesso.",
         },
       },
-
+      newCampaignModal:{
+        buttons: {
+          cancel: "Cancelar",
+          done: "Carregar",
+        }
+      },
       notifications: {
         noTickets: "Nenhuma notificação.",
       },

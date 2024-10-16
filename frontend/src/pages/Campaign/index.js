@@ -3,6 +3,7 @@ import axios from "axios";
 import api from "../../services/api";
 import MainContainer from "../../components/MainContainer";
 import MainHeader from "../../components/MainHeader";
+import NewCampaignModal from "../../components/NewCampaignModal";
 import MainHeaderButtonsWrapper from "../../components/MainHeaderButtonsWrapper";
 import Title from "../../components/Title";
 import { i18n } from "../../translate/i18n";
@@ -112,6 +113,7 @@ const Campaign = () => {
   const [templates, setTemplates] = useState([]);
   const [value, setValue] = useState(0);
   const [newTemplateModalOpen, setNewTemplateModalOpen] = useState(false);
+  const [newCampaignModalOpen, setNewCampaignModalOpen] = useState(false);
   const [greetingTemplates, setGreetingTemplates] = useState([]);
   const [deletingGreetingTemplates, setDeletingGreetingTemplates] =
     useState(null);
@@ -144,6 +146,13 @@ const Campaign = () => {
     setNewTemplateModalOpen(true);
   };
 
+    const handleOpenNewCampaignModal = () => {
+      setNewCampaignModalOpen(true);
+    };
+
+    const handleCloseNewCampaignModal = () => {
+      setNewCampaignModalOpen(false);
+    };
 
   const handleCloseNewTemplateModal = () => {
     setNewTemplateModalOpen(false);
@@ -178,6 +187,11 @@ const handleSaveToTable = (newData) => {
   return (
     <div className={classes.root}>
       <MainContainer>
+        <NewCampaignModal
+          open={newCampaignModalOpen}
+          onClose={handleCloseNewCampaignModal}
+        />
+
         <ConfirmationModal
           title={
             deletingGreetingTemplates
@@ -200,6 +214,16 @@ const handleSaveToTable = (newData) => {
         </ConfirmationModal>
         <MainHeader>
           <Title>{i18n.t("campaign.title")}</Title>
+          <MainHeaderButtonsWrapper>
+            <Button
+              variant="contained"
+              onClick={handleOpenNewCampaignModal}
+              color="primary"
+              className={classes.primaryButton}
+            >
+              {i18n.t("campaign.addCampaign")}
+            </Button>
+          </MainHeaderButtonsWrapper>
         </MainHeader>
 
         <Paper className={classes.tabs}>
@@ -227,7 +251,7 @@ const handleSaveToTable = (newData) => {
                 </p>
               </Tooltip>
               <MainHeaderButtonsWrapper>
-                <Tooltip title={i18n.t("campaign.template.add")}>
+                <Tooltip title={i18n.t("campaign.templates.add")}>
                   <Button
                     variant="contained"
                     onClick={handleOpenNewTemplateModal}
