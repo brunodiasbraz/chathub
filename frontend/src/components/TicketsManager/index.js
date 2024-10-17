@@ -12,9 +12,10 @@ import {
 } from "@material-ui/core";
 
 import {
-  AllInboxRounded,
-  HourglassEmptyRounded,
-  MoveToInbox,
+  // AllInboxRounded,
+  //HourglassEmptyRounded,
+  //MoveToInbox,
+  //FilterListRounded,
   Search
 } from "@material-ui/icons";
 
@@ -50,6 +51,7 @@ const useStyles = makeStyles((theme) => ({
   },
 
   tab: {
+    textTransform: "capitalize", 
     minWidth: 120,
     width: 120,
   },
@@ -59,7 +61,7 @@ const useStyles = makeStyles((theme) => ({
     justifyContent: "space-between",
     alignItems: "center",
     backgroundColor: theme.palette.background.paper,
-    padding: theme.spacing(1),
+    padding: theme.spacing(0, 2),
   },
 
   serachInputWrapper: {
@@ -98,7 +100,7 @@ const useStyles = makeStyles((theme) => ({
   searchContainer: {
     display: "flex",
     padding: "10px",
-    borderBottom: "2px solid rgba(0, 0, 0, .12)",
+    borderBottom: "1px solid rgba(0, 0, 0, .12)",
   },
 }));
 
@@ -163,6 +165,42 @@ const TicketsManager = () => {
           value={searchParam}
           onChange={handleSearch}
         />
+        <TicketsQueueSelect
+          selectedQueueIds={selectedQueueIds}
+          userQueues={user?.queues}
+          onChange={(values) => setSelectedQueueIds(values)}
+        />
+        <Paper square elevation={0} className={classes.ticketOptionsBox}>
+          <Button
+            variant="outlined"
+            color="primary"
+            style={{ textTransform: "capitalize" }}
+            onClick={() => setNewTicketModalOpen(true)}
+          >
+            {i18n.t("ticketsManager.buttons.newTicket")}
+          </Button>
+          <Can
+            role={user.profile}
+            perform="tickets-manager:showall"
+            yes={() => (
+              <FormControlLabel
+                label={i18n.t("tickets.buttons.showAll")}
+                labelPlacement="start"
+                control={
+                  <Switch
+                    size="small"
+                    checked={showAllTickets}
+                    onChange={() =>
+                      setShowAllTickets((prevState) => !prevState)
+                    }
+                    name="showAllTickets"
+                    color="primary"
+                  />
+                }
+              />
+            )}
+          />
+        </Paper>
       </Paper>
       <Paper elevation={0} square className={classes.tabsHeader}>
         <Tabs
@@ -175,7 +213,7 @@ const TicketsManager = () => {
         >
           <Tab
             value={"open"}
-            icon={<MoveToInbox />}
+            //icon={<MoveToInbox />}
             label={
               <Badge
                 className={classes.badge}
@@ -191,7 +229,7 @@ const TicketsManager = () => {
           />
           <Tab
             value={"pending"}
-            icon={<HourglassEmptyRounded />}
+            //icon={<HourglassEmptyRounded />}
             label={
               <Badge
                 className={classes.badge}
@@ -207,13 +245,13 @@ const TicketsManager = () => {
           />
           <Tab
             value={"closed"}
-            icon={<AllInboxRounded />}
+            //icon={<AllInboxRounded />}
             label={i18n.t("tickets.tabs.closed.title")}
             classes={{ root: classes.tab }}
           />
         </Tabs>
       </Paper>
-      <Paper square elevation={0} className={classes.ticketOptionsBox}>
+      {/* <Paper square elevation={0} className={classes.ticketOptionsBox}>
         <Button
           variant="outlined"
           color="primary"
@@ -242,13 +280,13 @@ const TicketsManager = () => {
             />
           )}
         />
-        <TicketsQueueSelect
+        {/* <TicketsQueueSelect
           style={{ marginLeft: 6 }}
           selectedQueueIds={selectedQueueIds}
           userQueues={user?.queues}
           onChange={(values) => setSelectedQueueIds(values)}
-        />
-      </Paper>
+        /> *
+      </Paper> */}
       <TabPanel value={tab} name="open" className={classes.ticketsWrapper}>
         <Paper className={classes.ticketsWrapper}>
           <TicketsList

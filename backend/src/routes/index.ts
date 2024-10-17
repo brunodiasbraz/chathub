@@ -15,6 +15,7 @@ import tagRoutes from "./tagRoutes";
 import integrationRoutes from "./integrationRoutes";
 // import companyRoutes from "./companyRoutes";
 import systemRoutes from "./systemRoutes";
+import campaignRoutes from "./campaignRoutes";
 
 const routes = Router();
 
@@ -33,5 +34,6 @@ routes.use(tagRoutes);
 routes.use(integrationRoutes);
 // routes.use(companyRoutes);
 routes.use(systemRoutes);
+routes.use(campaignRoutes);
 
 export default routes;

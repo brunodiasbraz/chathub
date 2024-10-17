@@ -15,6 +15,8 @@ import CheckContactNumber from "../services/WbotServices/CheckNumber";
 import GetProfilePicUrl from "../services/WbotServices/GetProfilePicUrl";
 import SendWhatsAppMedia from "../services/WbotServices/SendWhatsAppMedia";
 import SendWhatsAppMessage from "../services/WbotServices/SendWhatsAppMessage";
+import { ShowUserService, ShowUserByEmailService } from "../services/UserServices/ShowUserService";
+import { update } from "./TicketController";
 
 type WhatsappData = {
   whatsappId: number;
@@ -86,9 +88,9 @@ export const index = async (req: Request, res: Response): Promise<Response> => {
     whatsappId,
     body,
     quotedMsg,
-    userId,
+    email, // Change here to accept email instead of userId
     queueId
-  }: MessageData & WhatsappData & { userId: number; queueId: number } =
+  }: MessageData & WhatsappData & { email: string; queueId: number } =
     req.body;
   const medias = req.files as Express.Multer.File[];
   const newContact: ContactData = req.body;
@@ -99,13 +101,21 @@ export const index = async (req: Request, res: Response): Promise<Response> => {
     number: Yup.string()
       .required()
       .matches(/^\d+$/, "Invalid number format. Only numbers are allowed."),
-    userId: Yup.number().required("User ID is required")
+    email: Yup.string().email().required("Email is required") // Change the validation to expect email
   });
 
   try {
-    await schema.validate({ number: formattedNumber, userId });
+    await schema.validate({ number: formattedNumber, email });
   } catch (err: any) {
     throw new AppError(err.message);
+  }
+
+  // Get userId from email
+  const user = await ShowUserByEmailService(email); // Fetch user by email
+  const userId = user?.id;
+
+  if (!userId) {
+    throw new AppError("User not found");
   }
 
   const contactAndTicket = await createContact(

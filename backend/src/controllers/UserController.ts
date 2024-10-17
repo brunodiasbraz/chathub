@@ -7,7 +7,7 @@ import AppError from "../errors/AppError";
 import CreateUserService from "../services/UserServices/CreateUserService";
 import ListUsersService from "../services/UserServices/ListUsersService";
 import UpdateUserService from "../services/UserServices/UpdateUserService";
-import ShowUserService from "../services/UserServices/ShowUserService";
+import {ShowUserService} from "../services/UserServices/ShowUserService";
 import DeleteUserService from "../services/UserServices/DeleteUserService";
 
 type IndexQuery = {

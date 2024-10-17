@@ -43,32 +43,35 @@ import toastError from "../../errors/toastError";
 import api from "../../services/api";
 import { i18n } from "../../translate/i18n";
 
-const useStyles = makeStyles(theme => ({
-	mainPaper: {
-		flex: 1,
-		padding: theme.spacing(2),
-		margin: theme.spacing(1),
-		overflowY: "scroll",
-		...theme.scrollbarStyles,
-	},
-	customTableCell: {
-		display: "flex",
-		alignItems: "center",
-		justifyContent: "center",
-	},
-	tooltip: {
-		backgroundColor: "#f5f5f9",
-		color: "rgba(0, 0, 0, 0.87)",
-		fontSize: theme.typography.pxToRem(14),
-		border: "1px solid #dadde9",
-		maxWidth: 450,
-	},
-	tooltipPopper: {
-		textAlign: "center",
-	},
-	buttonProgress: {
-		color: green[500],
-	},
+const useStyles = makeStyles((theme) => ({
+  mainPaper: {
+    flex: 1,
+    padding: theme.spacing(2),
+    margin: theme.spacing(1),
+    overflowY: "scroll",
+    ...theme.scrollbarStyles,
+  },
+  customTableCell: {
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  tooltip: {
+    backgroundColor: "#f5f5f9",
+    color: "rgba(0, 0, 0, 0.87)",
+    fontSize: theme.typography.pxToRem(14),
+    border: "1px solid #dadde9",
+    maxWidth: 450,
+  },
+  tooltipPopper: {
+    textAlign: "center",
+  },
+  buttonProgress: {
+    color: green[500],
+  },
+  primaryButton: {
+    color: "white",
+  },
 }));
 
 const CustomToolTip = ({ title, content, children }) => {
@@ -199,58 +202,59 @@ const Connections = () => {
 
 	const renderActionButtons = whatsApp => {
 		return (
-			<>
-				{whatsApp.status === "qrcode" && (
-					<Button
-						size="small"
-						variant="contained"
-						color="primary"
-						onClick={() => handleOpenQrModal(whatsApp)}
-					>
-						{i18n.t("connections.buttons.qrcode")}
-					</Button>
-				)}
-				{whatsApp.status === "DISCONNECTED" && (
-					<>
-						<Button
-							size="small"
-							variant="outlined"
-							color="primary"
-							onClick={() => handleStartWhatsAppSession(whatsApp.id)}
-						>
-							{i18n.t("connections.buttons.tryAgain")}
-						</Button>{" "}
-						<Button
-							size="small"
-							variant="outlined"
-							color="secondary"
-							onClick={() => handleRequestNewQrCode(whatsApp.id)}
-						>
-							{i18n.t("connections.buttons.newQr")}
-						</Button>
-					</>
-				)}
-				{(whatsApp.status === "CONNECTED" ||
-					whatsApp.status === "PAIRING" ||
-					whatsApp.status === "TIMEOUT") && (
-						<Button
-							size="small"
-							variant="outlined"
-							color="secondary"
-							onClick={() => {
-								handleOpenConfirmationModal("disconnect", whatsApp.id);
-							}}
-						>
-							{i18n.t("connections.buttons.disconnect")}
-						</Button>
-					)}
-				{whatsApp.status === "OPENING" && (
-					<Button size="small" variant="outlined" disabled color="default">
-						{i18n.t("connections.buttons.connecting")}
-					</Button>
-				)}
-			</>
-		);
+      <>
+        {whatsApp.status === "qrcode" && (
+          <Button
+            size="small"
+            variant="contained"
+            color="primary"
+            className={classes.primaryButton}
+            onClick={() => handleOpenQrModal(whatsApp)}
+          >
+            {i18n.t("connections.buttons.qrcode")}
+          </Button>
+        )}
+        {whatsApp.status === "DISCONNECTED" && (
+          <>
+            <Button
+              size="small"
+              variant="outlined"
+              color="primary"
+              onClick={() => handleStartWhatsAppSession(whatsApp.id)}
+            >
+              {i18n.t("connections.buttons.tryAgain")}
+            </Button>{" "}
+            <Button
+              size="small"
+              variant="outlined"
+              color="secondary"
+              onClick={() => handleRequestNewQrCode(whatsApp.id)}
+            >
+              {i18n.t("connections.buttons.newQr")}
+            </Button>
+          </>
+        )}
+        {(whatsApp.status === "CONNECTED" ||
+          whatsApp.status === "PAIRING" ||
+          whatsApp.status === "TIMEOUT") && (
+          <Button
+            size="small"
+            variant="outlined"
+            color="secondary"
+            onClick={() => {
+              handleOpenConfirmationModal("disconnect", whatsApp.id);
+            }}
+          >
+            {i18n.t("connections.buttons.disconnect")}
+          </Button>
+        )}
+        {whatsApp.status === "OPENING" && (
+          <Button size="small" variant="outlined" disabled color="default">
+            {i18n.t("connections.buttons.connecting")}
+          </Button>
+        )}
+      </>
+    );
 	};
 
 	const renderStatusToolTips = whatsApp => {
@@ -312,142 +316,141 @@ const Connections = () => {
 	};
 
 	return (
-		<MainContainer>
-			<ConfirmationModal
-				title={confirmModalInfo.title}
-				open={confirmModalOpen}
-				onClose={setConfirmModalOpen}
-				onConfirm={handleSubmitConfirmationModal}
-			>
-				{confirmModalInfo.message}
-			</ConfirmationModal>
-			<QrcodeModal
-				open={qrModalOpen}
-				onClose={handleCloseQrModal}
-				whatsAppId={!whatsAppModalOpen && selectedWhatsApp?.id}
-			/>
-			<WhatsAppModal
-				open={whatsAppModalOpen}
-				onClose={handleCloseWhatsAppModal}
-				whatsAppId={!qrModalOpen && selectedWhatsApp?.id}
-			/>
-			<MainHeader>
-				<Title>{i18n.t("connections.title")} ({whatsApps.length})</Title>
-				<MainHeaderButtonsWrapper>
-					<Tooltip title={i18n.t("connections.buttons.restart")}>
-						<Button
-							variant="contained"
-							color="primary"
-							onClick={restartpm2}
-						>
-							<SyncOutlined />
-						</Button>
-					</Tooltip>
-					<Tooltip title={i18n.t("connections.buttons.add")}>
-						<Button
-							variant="contained"
-							color="primary"
-							onClick={handleOpenWhatsAppModal}
-						>
-							<WhatsApp />
-						</Button>
-					</Tooltip>
-				</MainHeaderButtonsWrapper>
-			</MainHeader>
-			<Paper className={classes.mainPaper} variant="outlined">
-				<Table size="small">
-					<TableHead>
-						<TableRow>
-							<TableCell align="center">
-								{i18n.t("connections.table.id")}
-							</TableCell>
-							<TableCell align="center">
-								{i18n.t("connections.table.name")}
-							</TableCell>
-							<TableCell align="center">
-								{i18n.t("connections.table.status")}
-							</TableCell>
-							<TableCell align="center">
-								{i18n.t("connections.table.number")}
-							</TableCell>
-							<TableCell align="center">
-								{i18n.t("connections.table.session")}
-							</TableCell>
-							<TableCell align="center">
-								{i18n.t("connections.table.lastUpdate")}
-							</TableCell>
-							<TableCell align="center">
-								{i18n.t("connections.table.default")}
-							</TableCell>
-							<TableCell align="center">
-								{i18n.t("connections.table.actions")}
-							</TableCell>
-						</TableRow>
-					</TableHead>
-					<TableBody>
-						{loading ? (
-							<TableRowSkeleton />
-						) : (
-							<>
-								{whatsApps?.length > 0 &&
-									whatsApps.map(whatsApp => (
-										<TableRow key={whatsApp.id}>
-											<TableCell align="center">
-												{whatsApp.id}
-											</TableCell>
-											<TableCell align="center">
-												{whatsApp.name}
-											</TableCell>
-											<TableCell align="center">
-												{renderStatusToolTips(whatsApp)}
-											</TableCell>
-											<TableCell align="center">
-												{whatsApp.number ? (
-													<>
-														{formatPhoneNumber(whatsApp.number)}
-													</>
-												) : "-"}
+    <MainContainer>
+      <ConfirmationModal
+        title={confirmModalInfo.title}
+        open={confirmModalOpen}
+        onClose={setConfirmModalOpen}
+        onConfirm={handleSubmitConfirmationModal}
+      >
+        {confirmModalInfo.message}
+      </ConfirmationModal>
+      <QrcodeModal
+        open={qrModalOpen}
+        onClose={handleCloseQrModal}
+        whatsAppId={!whatsAppModalOpen && selectedWhatsApp?.id}
+      />
+      <WhatsAppModal
+        open={whatsAppModalOpen}
+        onClose={handleCloseWhatsAppModal}
+        whatsAppId={!qrModalOpen && selectedWhatsApp?.id}
+      />
+      <MainHeader>
+        <Title>
+          {i18n.t("connections.title")} ({whatsApps.length})
+        </Title>
+        <MainHeaderButtonsWrapper>
+          <Tooltip title={i18n.t("connections.buttons.restart")}>
+            <Button
+              variant="contained"
+              color="primary"
+              className={classes.primaryButton}
+              onClick={restartpm2}
+            >
+              <SyncOutlined />
+            </Button>
+          </Tooltip>
+          <Tooltip title={i18n.t("connections.buttons.add")}>
+            <Button
+              variant="contained"
+              color="primary"
+              className={classes.primaryButton}
+              onClick={handleOpenWhatsAppModal}
+            >
+              <WhatsApp />
+            </Button>
+          </Tooltip>
+        </MainHeaderButtonsWrapper>
+      </MainHeader>
+      <Paper className={classes.mainPaper} variant="outlined">
+        <Table size="small">
+          <TableHead>
+            <TableRow>
+              <TableCell align="center">
+                {i18n.t("connections.table.id")}
+              </TableCell>
+              <TableCell align="center">
+                {i18n.t("connections.table.name")}
+              </TableCell>
+              <TableCell align="center">
+                {i18n.t("connections.table.status")}
+              </TableCell>
+              <TableCell align="center">
+                {i18n.t("connections.table.number")}
+              </TableCell>
+              <TableCell align="center">
+                {i18n.t("connections.table.session")}
+              </TableCell>
+              <TableCell align="center">
+                {i18n.t("connections.table.lastUpdate")}
+              </TableCell>
+              <TableCell align="center">
+                {i18n.t("connections.table.default")}
+              </TableCell>
+              <TableCell align="center">
+                {i18n.t("connections.table.actions")}
+              </TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {loading ? (
+              <TableRowSkeleton />
+            ) : (
+              <>
+                {whatsApps?.length > 0 &&
+                  whatsApps.map((whatsApp) => (
+                    <TableRow key={whatsApp.id}>
+                      <TableCell align="center">{whatsApp.id}</TableCell>
+                      <TableCell align="center">{whatsApp.name}</TableCell>
+                      <TableCell align="center">
+                        {renderStatusToolTips(whatsApp)}
+                      </TableCell>
+                      <TableCell align="center">
+                        {whatsApp.number ? (
+                          <>{formatPhoneNumber(whatsApp.number)}</>
+                        ) : (
+                          "-"
+                        )}
+                      </TableCell>
+                      <TableCell align="center">
+                        {renderActionButtons(whatsApp)}
+                      </TableCell>
+                      <TableCell align="center">
+                        {format(parseISO(whatsApp.updatedAt), "dd/MM/yy HH:mm")}
+                      </TableCell>
+                      <TableCell align="center">
+                        {whatsApp.isDefault && (
+                          <div className={classes.customTableCell}>
+                            <CheckCircle style={{ color: green[500] }} />
+                          </div>
+                        )}
+                      </TableCell>
+                      <TableCell align="center">
+                        <IconButton
+                          size="small"
+                          onClick={() => handleEditWhatsApp(whatsApp)}
+                        >
+                          <Edit color="secondary" />
+                        </IconButton>
 
-											</TableCell>
-											<TableCell align="center">
-												{renderActionButtons(whatsApp)}
-											</TableCell>
-											<TableCell align="center">
-												{format(parseISO(whatsApp.updatedAt), "dd/MM/yy HH:mm")}
-											</TableCell>
-											<TableCell align="center">
-												{whatsApp.isDefault && (
-													<div className={classes.customTableCell}>
-														<CheckCircle style={{ color: green[500] }} />
-													</div>
-												)}
-											</TableCell>
-											<TableCell align="center">
-												<IconButton
-													size="small"
-													onClick={() => handleEditWhatsApp(whatsApp)}
-												>
-													<Edit color="secondary" />
-												</IconButton>
-
-												<IconButton
-													size="small"
-													onClick={e => {
-														handleOpenConfirmationModal("delete", whatsApp.id);
-													}}
-												>
-													<DeleteOutline color="secondary" />
-												</IconButton>
-											</TableCell>
-										</TableRow>
-									))}
-							</>
-						)}
-					</TableBody>
-				</Table>
-			</Paper>
-		</MainContainer>
-	);
+                        <IconButton
+                          size="small"
+                          onClick={(e) => {
+                            handleOpenConfirmationModal("delete", whatsApp.id);
+                          }}
+                        >
+                          <DeleteOutline color="secondary" />
+                        </IconButton>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+              </>
+            )}
+          </TableBody>
+        </Table>
+      </Paper>
+    </MainContainer>
+  );
 };
 
 export default Connections;

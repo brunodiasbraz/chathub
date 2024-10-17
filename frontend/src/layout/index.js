@@ -47,7 +47,7 @@ const useStyles = makeStyles((theme) => ({
   toolbar: {
     paddingRight: 24,
     color: "#ffffff",
-    background: theme.palette.toolbar.main
+    background: theme.palette.toolbar.main,
   },
   toolbarIcon: {
     display: "flex",
@@ -55,7 +55,7 @@ const useStyles = makeStyles((theme) => ({
     justifyContent: "flex-end",
     padding: "0 8px",
     minHeight: "48px",
-    backgroundColor: theme.palette.toolbarIcon.main
+    backgroundColor: theme.palette.toolbarIcon.main,
   },
   appBar: {
     zIndex: theme.zIndex.drawer + 1,
@@ -89,6 +89,23 @@ const useStyles = makeStyles((theme) => ({
       easing: theme.transitions.easing.sharp,
       duration: theme.transitions.duration.enteringScreen,
     }),
+    overflowY: "scroll",
+    direction: "rtl",
+  },
+  drawerContent: {
+    direction: "ltr", // Retorna a direção do conteúdo para a leitura normal (da esquerda para a direita)
+  },
+  scrollbar: {
+    "&::-webkit-scrollbar": {
+      width: "8px", // Afina a barra de rolagem
+    },
+    "&::-webkit-scrollbar-thumb": {
+      backgroundColor: "#888", // Cor da barra de rolagem
+      borderRadius: "10px",
+    },
+    "&::-webkit-scrollbar-thumb:hover": {
+      backgroundColor: "#555", // Cor ao passar o mouse
+    },
   },
   drawerPaperClose: {
     overflowX: "hidden",
@@ -121,8 +138,8 @@ const useStyles = makeStyles((theme) => ({
   systemCss: {
     display: "flex",
     justifyContent: "center",
-    fontSize: 12
-  }
+    fontSize: 12,
+  },
 }));
 
 const LoggedInLayout = ({ children }) => {
@@ -224,26 +241,36 @@ const LoggedInLayout = ({ children }) => {
     <div className={classes.root}>
       <Drawer
         variant={drawerVariant}
-        className={drawerOpen ? classes.drawerPaper : classes.drawerPaperClose}
+        className={clsx(
+          classes.drawerPaper,
+          classes.scrollbar,
+          !drawerOpen && classes.drawerPaperClose
+        )}
         classes={{
           paper: clsx(
             classes.drawerPaper,
+            classes.scrollbar,
             !drawerOpen && classes.drawerPaperClose
           ),
         }}
         open={drawerOpen}
       >
-        <div className={classes.toolbarIcon}>
-          <img src={logodash} alt="logo" />
-          <IconButton color="secondary" onClick={() => setDrawerOpen(!drawerOpen)}>
-            <ChevronLeftIcon />
-          </IconButton>
+        <div className={clsx(classes.drawerContent)}>
+          <div className={classes.toolbarIcon}>
+            <img src={logodash} alt="logo" />
+            <IconButton
+              color="secondary"
+              onClick={() => setDrawerOpen(!drawerOpen)}
+            >
+              <ChevronLeftIcon />
+            </IconButton>
+          </div>
+          <Divider />
+          <List>
+            <MainListItems drawerClose={drawerClose} />
+          </List>
+          <Divider />
         </div>
-        <Divider />
-        <List>
-          <MainListItems drawerClose={drawerClose} />
-        </List>
-        <Divider />
       </Drawer>
       <UserModal
         open={userModalOpen}
@@ -272,11 +299,14 @@ const LoggedInLayout = ({ children }) => {
           <Typography
             component="h1"
             variant="h6"
+            style={{ fontSize: 17 }}
             color="secondary"
             noWrap
             className={classes.title}
           >
-            {i18n.t("mainDrawer.appBar.message.hi")} {user.name}, {i18n.t("mainDrawer.appBar.message.text")} {system.name || "Press Ticket"}
+            {i18n.t("mainDrawer.appBar.message.hi")} {user.name},{" "}
+            {i18n.t("mainDrawer.appBar.message.text")}{" "}
+            {system.name || "Press Ticket"}
           </Typography>
           {user.id && <NotificationsPopOver />}
 
@@ -315,18 +345,32 @@ const LoggedInLayout = ({ children }) => {
               <span className={classes.systemCss}>
                 <Link
                   color="inherit"
-                  href={system.url || "https://github.com/rtenorioh/Press-Ticket"}
-                  style={{ display: "flex", alignItems: "center", marginTop: 10 }}
+                  href={
+                    system.url || "https://github.com/rtenorioh/Press-Ticket"
+                  }
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    marginTop: 10,
+                  }}
                 >
                   {latestVersion && latestVersion > systemVersion ? (
                     <span style={{ color: "#eee8aa" }}>
-                      <Tooltip title="Entrar em contato com o Suporte para solicitar Atualização!" arrow placement="left-start" >
+                      <Tooltip
+                        title="Entrar em contato com o Suporte para solicitar Atualização!"
+                        arrow
+                        placement="left-start"
+                      >
                         <Info fontSize="small" />
                       </Tooltip>
                     </span>
                   ) : (
                     <span style={{ color: "green" }}>
-                      <Tooltip title="Versão atualizada!" arrow placement="left-start" >
+                      <Tooltip
+                        title="Versão atualizada!"
+                        arrow
+                        placement="left-start"
+                      >
                         <CheckCircle fontSize="small" />
                       </Tooltip>
                     </span>

@@ -98,17 +98,18 @@ const useStyles = makeStyles((theme) => ({
     ...theme.scrollbarStyles,
   },
   csvbtn: {
-    textDecoration: 'none'
+    textDecoration: "none",
   },
   avatar: {
     width: "50px",
     height: "50px",
-    borderRadius: "25%"
+    borderRadius: "25%",
   },
   buttonSize: {
     maxWidth: "36px",
     maxHeight: "36px",
     padding: theme.spacing(1),
+    color: "white",
   },
 }));
 
@@ -284,26 +285,34 @@ const Contacts = () => {
       ></ContactModal>
       <ConfirmationModal
         title={
-          deletingContact ? `${i18n.t("contacts.confirmationModal.deleteTitle")} ${deletingContact.name}?`
-            : deletingAllContact ? `${i18n.t("contacts.confirmationModal.deleteAllTitle")}`
-              : `${i18n.t("contacts.confirmationModal.importTitle")}`
+          deletingContact
+            ? `${i18n.t("contacts.confirmationModal.deleteTitle")} ${
+                deletingContact.name
+              }?`
+            : deletingAllContact
+            ? `${i18n.t("contacts.confirmationModal.deleteAllTitle")}`
+            : `${i18n.t("contacts.confirmationModal.importTitle")}`
         }
         open={confirmOpen}
         onClose={setConfirmOpen}
         onConfirm={(e) =>
-          deletingContact ? handleDeleteContact(deletingContact.id)
-            : deletingAllContact ? handleDeleteAllContact(deletingAllContact)
-              : handleimportContact()
+          deletingContact
+            ? handleDeleteContact(deletingContact.id)
+            : deletingAllContact
+            ? handleDeleteAllContact(deletingAllContact)
+            : handleimportContact()
         }
       >
-        {
-          deletingContact ? `${i18n.t("contacts.confirmationModal.deleteMessage")}`
-            : deletingAllContact ? `${i18n.t("contacts.confirmationModal.deleteAllMessage")}`
-              : `${i18n.t("contacts.confirmationModal.importMessage")}`
-        }
+        {deletingContact
+          ? `${i18n.t("contacts.confirmationModal.deleteMessage")}`
+          : deletingAllContact
+          ? `${i18n.t("contacts.confirmationModal.deleteAllMessage")}`
+          : `${i18n.t("contacts.confirmationModal.importMessage")}`}
       </ConfirmationModal>
       <MainHeader>
-        <Title>{i18n.t("contacts.title")} ({contacts.length})</Title>
+        <Title>
+          {i18n.t("contacts.title")} ({contacts.length})
+        </Title>
         <MainHeaderButtonsWrapper>
           <Can
             role={user.profile}
@@ -337,17 +346,18 @@ const Contacts = () => {
             <CSVLink
               className={classes.csvbtn}
               separator=";"
-              filename={'pressticket-contacts.csv'}
-              data={
-                contacts.map((contact) => ({
-                  name: contact.name,
-                  number: contact.number,
-                  email: contact.email
-                }))
-              }>
+              filename={"pressticket-contacts.csv"}
+              data={contacts.map((contact) => ({
+                name: contact.name,
+                number: contact.number,
+                email: contact.email,
+              }))}
+            >
               <Button
                 variant="contained"
-                color="primary">
+                className={classes.buttonSize}
+                color="primary"
+              >
                 <Archive />
               </Button>
             </CSVLink>
@@ -385,9 +395,7 @@ const Contacts = () => {
           <TableHead>
             <TableRow>
               <TableCell padding="checkbox" />
-              <TableCell>
-                {i18n.t("contacts.table.name")}
-              </TableCell>
+              <TableCell>{i18n.t("contacts.table.name")}</TableCell>
               <TableCell align="center">
                 {i18n.t("contacts.table.whatsapp")}
               </TableCell>
@@ -407,17 +415,27 @@ const Contacts = () => {
                   return (
                     contact.tags &&
                     contact.tags.length > 0 &&
-                    filteredTags.every(tag => contact.tags.some(ctag => ctag.id === tag.id))
+                    filteredTags.every((tag) =>
+                      contact.tags.some((ctag) => ctag.id === tag.id)
+                    )
                   );
                 })
                 .map((contact) => (
                   <TableRow key={contact.id}>
                     <TableCell style={{ paddingRight: 0 }}>
-                      {<Avatar src={contact.profilePicUrl} className={classes.avatar} />}
+                      {
+                        <Avatar
+                          src={contact.profilePicUrl}
+                          className={classes.avatar}
+                        />
+                      }
                     </TableCell>
                     <TableCell>{contact.name}</TableCell>
                     <TableCell align="center">
-                      {user.isTricked === "enabled" ? formatPhoneNumber(contact.number) : formatPhoneNumber(contact.number).slice(0, -4) + "****"}
+                      {user.isTricked === "enabled"
+                        ? formatPhoneNumber(contact.number)
+                        : formatPhoneNumber(contact.number).slice(0, -4) +
+                          "****"}
                     </TableCell>
                     <TableCell align="center">{contact.email}</TableCell>
                     <TableCell align="center">
@@ -459,7 +477,7 @@ const Contacts = () => {
           </TableBody>
         </Table>
       </Paper>
-    </MainContainer >
+    </MainContainer>
   );
 };
 

@@ -6,7 +6,7 @@ import Contact from "../../models/Contact";
 import Message from "../../models/Message";
 import Queue from "../../models/Queue";
 import Whatsapp from "../../models/Whatsapp";
-import ShowUserService from "../UserServices/ShowUserService";
+import {ShowUserService} from "../UserServices/ShowUserService";
 import ListSettingsServiceOne from "../SettingServices/ListSettingsServiceOne";
 
 interface Request {

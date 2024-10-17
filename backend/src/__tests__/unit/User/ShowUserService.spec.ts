@@ -2,7 +2,7 @@ import faker from "faker";
 import AppError from "../../../errors/AppError";
 import User from "../../../models/User";
 import CreateUserService from "../../../services/UserServices/CreateUserService";
-import ShowUserService from "../../../services/UserServices/ShowUserService";
+import {ShowUserService} from "../../../services/UserServices/ShowUserService";
 import { disconnect, truncate } from "../../utils/database";
 
 describe("User", () => {
