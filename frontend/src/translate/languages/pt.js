@@ -114,6 +114,7 @@ const messages = {
         },
         table: {
           id: "ID da Instância",
+          channel: "Canal",
           name: "Nome",
           number: "Número",
           status: "Status",
@@ -170,7 +171,7 @@ const messages = {
         table: {
           name: "Nome",
           whatsapp: "WhatsApp",
-          email: "E-mail",
+          channels: "Canais",
           actions: "Ações",
         },
       },
@@ -564,8 +565,16 @@ const messages = {
           },
           n8n: {
             title: "N8N",
-            urlApiN8N: "URL API N8N",
+            urlApiN8N: "URL API N8N"
           },
+          hub: {
+            title: "Notificame Hub",
+            hubToken: "Token"
+          },
+          maps: {
+            title: "Api Google Maps",
+            apiMaps: "Api Key"
+          }
         },
       },
       settings: {
@@ -610,6 +619,14 @@ const messages = {
             options: {
               enabled: "Aberto",
               disabled: "Fechado",
+            },
+          },
+          quickAnswer: {
+            name: "Respostas Rápidas",
+            note: "Se habilitado, poderá editar as respostas rápidas",
+            options: {
+              enabled: "Ativado",
+              disabled: "Desativado",
             },
           },
           closeTicketApi: {
