@@ -5,7 +5,7 @@ const ShowGreetingTemplateService = async (id: string): Promise<GreetingTemplate
   const quickAnswer = await GreetingTemplates.findByPk(id);
 
   if (!quickAnswer) {
-    throw new AppError("ERR_NO_QUICK_ANSWERS_FOUND", 404);
+    throw new AppError("ERR_NO_GREETING_TEMPLATES_FOUND", 404);
   }
 
   return quickAnswer;

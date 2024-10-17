@@ -4,7 +4,7 @@ import FormControl from "@material-ui/core/FormControl";
 import Select from "@material-ui/core/Select";
 import { Checkbox, ListItemText, IconButton } from "@material-ui/core";
 import { FilterListRounded } from "@material-ui/icons";
-import { i18n } from "../../translate/i18n";
+// import { i18n } from "../../translate/i18n";
 
 const TicketsQueueSelect = ({
   userQueues,

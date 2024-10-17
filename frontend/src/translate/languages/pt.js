@@ -1,6 +1,3 @@
-import GreetingTemplatesModal from "../../components/GreetingTemplatesModal";
-import NewCampaignModal from "../../components/NewCampaignModal";
-
 const messages = {
   pt: {
     translations: {

@@ -15,7 +15,7 @@ const CreateGreetingTemplateService = async ({
   });
 
   if (nameExists) {
-    throw new AppError("ERR__SHORTCUT_DUPLICATED");
+    throw new AppError("ERR_GREETING_TEMPLATE_DUPLICATED");
   }
 
   const greetingTemplate = await Greeting_Template.create({ template, status });

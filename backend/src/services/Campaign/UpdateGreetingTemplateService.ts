@@ -3,6 +3,7 @@ import AppError from "../../errors/AppError";
 
 interface GreetingTemplateData {
   template?: string;
+  status?: number;
 }
 
 interface Request {
@@ -16,7 +17,7 @@ const UpdateGreetingTemplateService = async ({
 }: Request): Promise<GreetingTemplates> => {
   
  
-  const { template } = greetingTemplateData;
+  const { template, status } = greetingTemplateData;
 
   const greetingTemplates = await GreetingTemplates.findOne({
     where: { id: greetingTemplateId }
@@ -27,7 +28,8 @@ const UpdateGreetingTemplateService = async ({
     throw new AppError("ERR_NO_GREETING_TEMPLATE_FOUND", 404);
   }
   await greetingTemplates.update({
-    template
+    template,
+    status
   });
 
   await greetingTemplates.reload({

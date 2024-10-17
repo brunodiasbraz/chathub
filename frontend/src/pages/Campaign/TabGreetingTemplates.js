@@ -2,26 +2,28 @@ import React, { useState, useEffect } from "react";
 import api from "../../services/api";
 import MainContainer from "../../components/MainContainer";
 import MainHeader from "../../components/MainHeader";
-import NewCampaignModal from "../../components/NewCampaignModal";
 import MainHeaderButtonsWrapper from "../../components/MainHeaderButtonsWrapper";
-import Title from "../../components/Title";
 import { i18n } from "../../translate/i18n";
-import TabGreetingTemplates from "./TabGreetingTemplates";
 import GreetingTemplatesModal from "../../components/GreetingTemplatesModal";
 import ConfirmationModal from "../../components/ConfirmationModal";
 import { toast } from "react-toastify";
 import toastError from "../../errors/toastError";
-
+import { AddCircleOutline, DeleteOutline, Edit } from "@material-ui/icons";
 import {
   Button,
+  IconButton,
   makeStyles,
   Paper,
-  Tabs,
-  Tab,
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableRow,
+  Tooltip,
   Box,
   Typography,
 } from "@material-ui/core";
-import PropTypes from "prop-types"; // Adicione esta linha para importar o PropTypes
+import PropTypes from "prop-types";
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -48,14 +50,6 @@ TabPanel.propTypes = {
   index: PropTypes.any.isRequired,
   value: PropTypes.any.isRequired,
 };
-
-// Função para acessibilidade
-function a11yProps(index) {
-  return {
-    id: `scrollable-auto-tab-${index}`,
-    "aria-controls": `scrollable-auto-tabpanel-${index}`,
-  };
-}
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -95,19 +89,17 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const Campaign = () => {
+const TabGreetingTemplates = () => {
   const classes = useStyles();
-  const [value, setValue] = useState(0);
   const [newTemplateModalOpen, setNewTemplateModalOpen] = useState(false);
-  const [newCampaignModalOpen, setNewCampaignModalOpen] = useState(false);
-  const setGreetingTemplates = useState([]);
+  const [greetingTemplates, setGreetingTemplates] = useState([]);
   const [deletingGreetingTemplates, setDeletingGreetingTemplates] =
     useState(null);
   const [confirmModalOpen, setConfirmModalOpen] = useState(false);
   const [newTemplateData, setNewTemplateData] = useState({
-      template: "",
-      status: "1",
-    });
+    template: "",
+    status: "1",
+  });
 
   // Função para carregar os templates
   useEffect(() => {
@@ -123,61 +115,48 @@ const Campaign = () => {
     fetchTemplates();
   }, []);
 
-  const handleChange = (event, newValue) => {
-    setValue(newValue);
-  };
-
-  const handleOpenNewTemplateModal = (id) => {
-    setNewTemplateData({ id });
+  const handleOpenNewTemplateModal = (id = null) => {
+    if (!id) {
+      // Se não for passado um ID, significa que é um novo template
+      setNewTemplateData({ template: "", status: "1" }); // Limpa os dados
+    } else {
+      // Se o ID for passado, trata-se de uma edição, mantém os dados como estão
+      setNewTemplateData({ id });
+    }
     setNewTemplateModalOpen(true);
   };
-
-    const handleOpenNewCampaignModal = () => {
-      setNewCampaignModalOpen(true);
-    };
-
-    const handleCloseNewCampaignModal = () => {
-      setNewCampaignModalOpen(false);
-    };
 
   const handleCloseNewTemplateModal = () => {
     setNewTemplateModalOpen(false);
   };
 
   const handleDeleteGreetingTemplate = async (greetingTemplateId) => {
-      try {
-        await api.delete(`/greetingTemplates/${greetingTemplateId}`);
-        toast.success(i18n.t("campaign.toasts.deleted"));
-      } catch (err) {
-        toastError(err);
-      }
-      setDeletingGreetingTemplates(null);
-      //setSearchParam("");
-      //setPageNumber(1);
+    try {
+      await api.delete(`/greetingTemplates/${greetingTemplateId}`);
+      toast.success(i18n.t("campaign.toasts.deleted"));
+    } catch (err) {
+      toastError(err);
+    }
+    setDeletingGreetingTemplates(null);
   };
 
-const handleSaveToTable = (newData) => {
-  setGreetingTemplates((prevTemplates) => {
-    if (newData.id) {
-      // Se o ID já existe, é uma edição; então, atualize o template correspondente
-      return prevTemplates.map((template) =>
-        template.id === newData.id ? newData : template
-      );
-    } else {
-      // Se o ID não existe, é um novo template; adicione-o ao final da lista
-      return [...prevTemplates, newData];
-    }
-  });
-};
+  const handleSaveToTable = (newData) => {
+    setGreetingTemplates((prevTemplates) => {
+      if (newData.id) {
+        // Se o ID já existe, é uma edição; então, atualize o template correspondente
+        return prevTemplates.map((template) =>
+          template.id === newData.id ? newData : template
+        );
+      } else {
+        // Se o ID não existe, é um novo template; adicione-o ao final da lista
+        return [...prevTemplates, newData];
+      }
+    });
+  };
 
   return (
     <div className={classes.root}>
       <MainContainer>
-        <NewCampaignModal
-          open={newCampaignModalOpen}
-          onClose={handleCloseNewCampaignModal}
-        />
-
         <ConfirmationModal
           title={
             deletingGreetingTemplates
@@ -198,39 +177,67 @@ const handleSaveToTable = (newData) => {
             ? `${i18n.t("campaign.confirmationModal.deleteMessage")}`
             : `${i18n.t("campaign.confirmationModal.deleteAllMessage")}`}
         </ConfirmationModal>
-        <MainHeader>
-          <Title>{i18n.t("campaign.title")}</Title>
-          <MainHeaderButtonsWrapper>
-            <Button
-              variant="contained"
-              onClick={handleOpenNewCampaignModal}
-              color="primary"
-              className={classes.primaryButton}
-            >
-              {i18n.t("campaign.addCampaign")}
-            </Button>
-          </MainHeaderButtonsWrapper>
-        </MainHeader>
+        <MainContainer>
+          <MainHeader>
+            <Tooltip title={i18n.t("campaign.templates.tooltip")}>
+              <p className={classes.subtitle}>
+                {i18n.t("campaign.templates.text")}
+              </p>
+            </Tooltip>
+            <MainHeaderButtonsWrapper>
+              <Tooltip title={i18n.t("campaign.templates.add")}>
+                <Button
+                  variant="contained"
+                  onClick={() => handleOpenNewTemplateModal()}
+                  color="primary"
+                >
+                  <AddCircleOutline className={classes.primaryButton} />
+                </Button>
+              </Tooltip>
+            </MainHeaderButtonsWrapper>
+          </MainHeader>
+          <Paper className={classes.customTableCell} variant="outlined">
+            <Table size="small">
+              <TableHead>
+                <TableRow>
+                  <TableCell align="center">ID</TableCell>
+                  <TableCell align="center">Template</TableCell>
+                  <TableCell align="center">Status</TableCell>
+                  <TableCell align="center">Ações</TableCell>
+                </TableRow>
+              </TableHead>
 
-        <Paper className={classes.tabs}>
-          <Tabs
-            value={value}
-            onChange={handleChange}
-            indicatorColor="primary"
-            textColor="primary"
-            centered
-          >
-            <Tab label="Ativas" {...a11yProps(0)} />
-            <Tab label="Mensagens" {...a11yProps(1)} />
-          </Tabs>
-        </Paper>
-
-        <TabPanel value={value} index={0}>
-          Conteúdo da aba Campanhas Ativas
-        </TabPanel>
-        <TabPanel value={value} index={1}>
-          <TabGreetingTemplates/>
-        </TabPanel>
+              <TableBody>
+                {greetingTemplates.map((template) => (
+                  <TableRow key={template.id}>
+                    <TableCell align="center">{template.id}</TableCell>
+                    <TableCell align="center">{template.template}</TableCell>
+                    <TableCell align="center">
+                      {template.status ? "Ativo" : "Inativo"}
+                    </TableCell>
+                    <TableCell align="center">
+                      <IconButton
+                        size="small"
+                        onClick={() => handleOpenNewTemplateModal(template.id)}
+                      >
+                        <Edit color="secondary" />
+                      </IconButton>
+                      <IconButton
+                        size="small"
+                        onClick={(e) => {
+                          setConfirmModalOpen(true);
+                          setDeletingGreetingTemplates(template);
+                        }}
+                      >
+                        <DeleteOutline color="secondary" />
+                      </IconButton>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </Paper>
+        </MainContainer>
       </MainContainer>
       <GreetingTemplatesModal
         open={newTemplateModalOpen}
@@ -242,4 +249,4 @@ const handleSaveToTable = (newData) => {
   );
 };
 
-export default Campaign;
+export default TabGreetingTemplates;

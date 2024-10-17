@@ -15,7 +15,6 @@ import {
   DialogTitle,
   makeStyles,
 } from "@material-ui/core";
-import axios from "axios";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -78,7 +77,7 @@ const useStyles = makeStyles((theme) => ({
 export default function NewCampaignModal({ open, onClose }) {
   const classes = useStyles();
   const [file, setFile] = useState({ selectedFile: null });
-  const [dragActive, setDragActive] = useState(false);
+  const setDragActive = useState(false);
   const [msg, setMsg] = useState("");
 
   const handleClose = () => {

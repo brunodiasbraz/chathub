@@ -57,51 +57,56 @@ const GreetingTemplatesModal = ({
     };
   }, []);
 
-  useEffect(() => {
-    if (!greetingTemplateId) {
-      setGreetingTemplate(initialState); // Limpa o estado ao abrir um novo modal
-    }
-
-    (async () => {
-      if (!greetingTemplateId) return; // Se for criação, não faz requisição
-
-      setLoading(true);
-      try {
-        const { data } = await api.get(
-          `/greetingTemplates/${greetingTemplateId}`
-        );
-        if (!isMounted.current) return;
-
-        setGreetingTemplate((prevState) => ({ ...prevState, ...data }));
-
-        setLoading(false);
-      } catch (err) {
-        setLoading(false);
-        toastError(err);
-      }
-    })();
-  }, [greetingTemplateId, open, initialValues]);
-
-const handleSaveGreetingTemplate = async (values) => {
-  try {
-    const payload = { ...values, status: values.status ? 1 : 0 };
-    let data;
-    if (greetingTemplateId) {
-      // Edição
-      data = await api.put(`/greetingTemplates/${greetingTemplateId}`, payload);
-    } else {
-      // Criação
-      const response = await api.post("/greetingTemplates", payload);
-      data = response.data;
-    }
-
-    onSave(data); // Chama a função para atualizar a tabela no componente base
-    onClose(); // Fecha o modal
-    toast.success(i18n.t("campaign.greetingTemplatesModal.success"));
-  } catch (err) {
-    toastError(err);
+useEffect(() => {
+  const initialState = { template: "", status: false };
+  if (!greetingTemplateId) {
+    setGreetingTemplate(initialState); // Limpa o estado ao adicionar novo template
   }
-};
+
+  (async () => {
+    if (!greetingTemplateId) return;
+
+    setLoading(true);
+    try {
+      const { data } = await api.get(
+        `/greetingTemplates/${greetingTemplateId}`
+      );
+      if (!isMounted.current) return;
+
+      setGreetingTemplate((prevState) => ({ ...prevState, ...data }));
+
+      setLoading(false);
+    } catch (err) {
+      setLoading(false);
+      toastError(err);
+    }
+  })();
+}, [greetingTemplateId, open]);
+
+
+  const handleSaveGreetingTemplate = async (values) => {
+    try {
+      const payload = { ...values, status: values.status ? 1 : 0 };
+      let data;
+      if (greetingTemplateId) {
+        // Edição
+        data = await api.put(
+          `/greetingTemplates/${greetingTemplateId}`,
+          payload
+        );
+      } else {
+        // Criação
+        const response = await api.post("/greetingTemplates", payload);
+        data = response.data;
+      }
+
+      onSave(data); // Chama a função para atualizar a tabela no componente base
+      onClose(); // Fecha o modal
+      toast.success(i18n.t("campaign.greetingTemplatesModal.success"));
+    } catch (err) {
+      toastError(err);
+    }
+  };
 
   const handleClickMsgVar = async (msgVar, setValueFunc) => {
     const el = messageInputRef.current;

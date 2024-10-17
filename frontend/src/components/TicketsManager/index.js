@@ -12,10 +12,10 @@ import {
 } from "@material-ui/core";
 
 import {
-  AllInboxRounded,
-  HourglassEmptyRounded,
-  MoveToInbox,
-  FilterListRounded,
+  // AllInboxRounded,
+  //HourglassEmptyRounded,
+  //MoveToInbox,
+  //FilterListRounded,
   Search
 } from "@material-ui/icons";
 
