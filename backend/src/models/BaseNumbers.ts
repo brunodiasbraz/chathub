@@ -21,6 +21,9 @@ class Base_Numbers extends Model<Base_Numbers> {
   @Column
   phone: string;
 
+  @Column
+  fileId: number;
+
   @CreatedAt
   createdAt: Date;
 

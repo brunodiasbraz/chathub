@@ -1,10 +1,11 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import PropTypes from "prop-types";
 import { Formik, Form } from "formik";
 import { i18n } from "../../translate/i18n";
 import { FiUpload } from "react-icons/fi";
 import api from "../../services/api";
 import toastError from "../../errors/toastError";
+import { AuthContext } from "../../context/Auth/AuthContext";
 import { toast } from "react-toastify";
 
 import {
@@ -79,6 +80,7 @@ export default function NewCampaignModal({ open, onClose }) {
   const [file, setFile] = useState({ selectedFile: null });
   const setDragActive = useState(false);
   const [msg, setMsg] = useState("");
+  const { user } = useContext(AuthContext);
 
   const handleClose = () => {
     onClose();
@@ -153,6 +155,7 @@ export default function NewCampaignModal({ open, onClose }) {
       const formData = new FormData();
       formData.append("arquivo", file.selectedFile);
 
+      // console.log("userNome>>> ", user);
       try {
         await api.post("/upload", formData, {
           headers: {

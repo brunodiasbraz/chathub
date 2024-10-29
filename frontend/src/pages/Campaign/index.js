@@ -7,6 +7,7 @@ import MainHeaderButtonsWrapper from "../../components/MainHeaderButtonsWrapper"
 import Title from "../../components/Title";
 import { i18n } from "../../translate/i18n";
 import TabGreetingTemplates from "./TabGreetingTemplates";
+import TabNewCampaign from "./TabNewCampaign";
 import GreetingTemplatesModal from "../../components/GreetingTemplatesModal";
 import ConfirmationModal from "../../components/ConfirmationModal";
 import { toast } from "react-toastify";
@@ -220,13 +221,13 @@ const handleSaveToTable = (newData) => {
             textColor="primary"
             centered
           >
-            <Tab label="Ativas" {...a11yProps(0)} />
+            <Tab label="Dashboard" {...a11yProps(0)} />
             <Tab label="Mensagens" {...a11yProps(1)} />
           </Tabs>
         </Paper>
 
         <TabPanel value={value} index={0}>
-          Conteúdo da aba Campanhas Ativas
+          <TabNewCampaign/>
         </TabPanel>
         <TabPanel value={value} index={1}>
           <TabGreetingTemplates/>

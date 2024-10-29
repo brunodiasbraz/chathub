@@ -726,7 +726,7 @@ const messages = {
       },
       confirmationModal: {
         buttons: {
-          confirm: "Ok",
+          confirm: "Sim",
           cancel: "Cancelar",
         },
       },

@@ -18,9 +18,7 @@ campaignRoutes.put("/greetingTemplates/:greetingTemplateId", isAuth, CampaignCon
 campaignRoutes.delete("/greetingTemplates/:greetingTemplateId", isAuth, CampaignController.remove);
 // campaignRoutes.delete("/quickAnswers", isAuth, QuickAnswerController.removeAll);
 
-
-// userRoutes.post("/upload", isAuth, upload.single("arquivo"), uploadFile);
-// userRoutes.post("/send-greeting", isAuth, sendGreetingMessage);
-// userRoutes.post("/send-messages", isAuth, sendMessagesToBase);
+campaignRoutes.get("/campaign/showFiles", CampaignController.showFiles);
+campaignRoutes.get("/campaign/showBaseNumbers", CampaignController.showBaseNumbers);
 
 export default campaignRoutes;
