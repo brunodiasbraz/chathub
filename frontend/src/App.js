@@ -21,6 +21,13 @@ const App = () => {
 
   const lightTheme = createTheme(
     {
+      typography: {
+        fontFamily: [
+          '-apple-system',
+          'Assistant',
+          'sans-serif',
+          ].join(','),
+      },
       scrollbarStyles: {
         "&::-webkit-scrollbar": {
           width: "8px",
