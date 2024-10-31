@@ -14,6 +14,7 @@ import {
 import {
 	Avatar,
 	Badge,
+	Chip,
 	Divider,
 	IconButton,
 	ListItem,
@@ -59,6 +60,11 @@ const useStyles = makeStyles(theme => ({
 	},
 	avatarContainer: {
 		position: "relative",
+	},
+	avatar: {
+		width: "50px",
+		height: "50px",
+		borderRadius: "25%"
 	},
 	badgeStyle: {
 		color: "white",
@@ -199,20 +205,29 @@ const TicketListItem = ({ ticket, userId, filteredTags }) => {
 	const [uName, setUserName] = useState(null);
 
 	useEffect(() => {
+		isMounted.current = true;
+
 		const delayDebounceFn = setTimeout(() => {
 			const fetchTicket = async () => {
+				if (!isMounted.current) return;
+
 				try {
 					const { data } = await api.get("/tickets/" + ticket.id);
-					setTag(data?.contact?.tags);
+					if (isMounted.current) {
+						setTag(data?.contact?.tags);
+					}
 				} catch (err) {
+					if (isMounted.current) {
+						toastError(err);
+					}
 				}
 			};
 			fetchTicket();
 		}, 500);
+
 		return () => {
-			if (delayDebounceFn !== null) {
-				clearTimeout(delayDebounceFn);
-			}
+			clearTimeout(delayDebounceFn);
+			isMounted.current = false;
 		};
 	}, [ticket.id, user, history]);
 
@@ -369,32 +384,32 @@ const TicketListItem = ({ ticket, userId, filteredTags }) => {
 				</Tooltip>
 
 				<ListItemAvatar className={classes.avatarContainer}>
-					<Avatar
-						style={{
-							width: "50px",
-							height: "50px",
-						}}
-						src={ticket?.contact?.profilePicUrl}
-					/>
-					<Badge
-						className={classes.badgeStyle}
-						badgeContent={ticket.unreadMessages}
-						overlap="rectangular"
-						max={9999}
-						classes={{
-							badge: classes.badgeStyle,
-						}}
-					/>
-					{ticket.isGroup && (
+					<>
+						<Avatar
+							className={classes.avatar}
+							src={ticket?.contact?.profilePicUrl}
+							alt="contact_image"
+						/>
 						<Badge
-							className={classes.groupBadgeStyle}
+							className={classes.badgeStyle}
+							badgeContent={ticket.unreadMessages}
 							overlap="rectangular"
-							badgeContent={<Group style={{ fontSize: '1rem' }} />}
+							max={9999}
 							classes={{
-								badge: classes.groupBadgeStyle,
+								badge: classes.badgeStyle,
 							}}
 						/>
-					)}
+						{ticket.isGroup && (
+							<Badge
+								className={classes.groupBadgeStyle}
+								overlap="rectangular"
+								badgeContent={<Group style={{ fontSize: '1rem' }} />}
+								classes={{
+									badge: classes.groupBadgeStyle,
+								}}
+							/>
+						)}
+					</>
 				</ListItemAvatar>
 
 				<ListItemText
@@ -505,65 +520,42 @@ const TicketListItem = ({ ticket, userId, filteredTags }) => {
 							<br></br>
 							{ticket.whatsappId && (
 								<Tooltip title={i18n.t("ticketsList.items.connection")}>
-									<Badge
+									<Chip
 										className={classes.Radiusdot}
-										// overlap="rectangular"
 										style={{
 											backgroundColor: system.color.lightTheme.palette.primary,
+											fontSize: "0.8em",
+											fontWeight: "bold",
 											height: 16,
-											padding: "5px 5px",
+											padding: "5px 0px",
 											position: "inherit",
 											borderRadius: "3px",
 											color: "white",
 											marginRight: "5px",
 											marginBottom: "3px",
-
 										}}
-										badgeContent={ticket.whatsapp?.name || i18n.t("ticketsList.items.user")}
-
-									/>
-
-								</Tooltip>
-							)}
-
-							{ticket.queueId && (
-								<Tooltip title={i18n.t("ticketsList.items.queue")}>
-									<Badge
-										className={classes.Radiusdot}
-										// overlap="rectangular"
-										style={{
-											backgroundColor: ticket.queue?.color || "#7C7C7C",
-											height: 16,
-											padding: "5px 5px",
-											position: "inherit",
-											borderRadius: "3px",
-											color: "white",
-											marginRight: "5px",
-											marginBottom: "3px",
-
-										}}
-										badgeContent={ticket.queue?.name || "No sector"}
+										label={(ticket.whatsapp?.name || i18n.t("ticketsList.items.user")).toUpperCase()}
 									/>
 								</Tooltip>
 							)}
 
 							{uName && (
 								<Tooltip title={i18n.t("ticketsList.items.user")}>
-									<Badge
+									<Chip
 										className={classes.Radiusdot}
-										// overlap="rectangular"
 										style={{
 											backgroundColor: "black",
+											fontSize: "0.8em",
+											fontWeight: "bold",
 											height: 16,
-											padding: "5px 5px",
+											padding: "5px 0px",
 											position: "inherit",
 											borderRadius: "3px",
 											color: "white",
 											marginRight: "5px",
 											marginBottom: "3px",
-
 										}}
-										badgeContent={uName}
+										label={uName.toUpperCase()}
 									/>
 								</Tooltip>
 							)}
@@ -590,7 +582,8 @@ const TicketListItem = ({ ticket, userId, filteredTags }) => {
 								className={classes.bottomButton}
 								color="primary"
 								onClick={e => handleOpenAcceptTicketWithouSelectQueue()}
-								loading={loading}>
+								loading={loading ? "true" : undefined}
+							>
 								<Done />
 							</IconButton>
 						</Tooltip>

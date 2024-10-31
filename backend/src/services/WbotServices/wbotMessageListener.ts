@@ -16,6 +16,7 @@ import ffmpeg from "fluent-ffmpeg";
 import Contact from "../../models/Contact";
 import Integration from "../../models/Integration";
 import Message from "../../models/Message";
+import OldMessage from "../../models/OldMessage";
 import Settings from "../../models/Setting";
 import Ticket from "../../models/Ticket";
 
@@ -42,12 +43,10 @@ interface Session extends Client {
 const writeFileAsync = promisify(writeFile);
 
 const verifyContact = async (msgContact: WbotContact): Promise<Contact> => {
-  const profilePicUrl = await msgContact.getProfilePicUrl();
 
   const contactData = {
     name: msgContact.name || msgContact.pushname || msgContact.id.user,
     number: msgContact.id.user,
-    profilePicUrl,
     isGroup: msgContact.isGroup
   };
 
@@ -712,6 +711,14 @@ const handleMessage = async (
       );
       await verifyMessage(sentMessage, ticket, contact);
     }
+    const profilePicUrl = await msgContact.getProfilePicUrl();
+    const contactData = {
+      name: msgContact.name || msgContact.pushname || msgContact.id.user,
+      number: msgContact.id.user,
+      profilePicUrl,
+      isGroup: msgContact.isGroup
+    };
+    await CreateOrUpdateContactService(contactData);
   } catch (err) {
     Sentry.captureException(err);
     logger.error(`Error handling whatsapp message: Err: ${err}`);
@@ -732,6 +739,10 @@ const handleMsgAck = async (msg: WbotMessage, ack: MessageAck) => {
           model: Message,
           as: "quotedMsg",
           include: ["contact"]
+        },
+        {
+          model: OldMessage,
+          as: "oldMessages"
         }
       ]
     });
@@ -751,9 +762,52 @@ const handleMsgAck = async (msg: WbotMessage, ack: MessageAck) => {
   }
 };
 
+const handleMsgEdit = async (
+  msg: WbotMessage,
+  newBody: string,
+  oldBody: string
+): Promise<void> => {
+  let editedMsg = await Message.findByPk(msg.id.id, {
+    include: [
+      {
+        model: OldMessage,
+        as: "oldMessages"
+      }
+    ]
+  });
+
+  if (!editedMsg) return;
+
+  const io = getIO();
+
+  try {
+    const messageData = {
+      messageId: msg.id.id,
+      body: oldBody
+    };
+
+    await OldMessage.upsert(messageData);
+    await editedMsg.update({ body: newBody, isEdited: true });
+
+    await editedMsg.reload();
+
+    io.to(editedMsg.ticketId.toString()).emit("appMessage", {
+      action: "update",
+      message: editedMsg
+    });
+  } catch (err) {
+    Sentry.captureException(err);
+    logger.error(`Error handling message edit. Err: ${err}`);
+  }
+};
+
 const wbotMessageListener = async (wbot: Session): Promise<void> => {
   wbot.on("message_create", async msg => {
     handleMessage(msg, wbot);
+  });
+
+  wbot.on("message_edit", async (msg, newBody, oldBody) => {
+    handleMsgEdit(msg, newBody as string, oldBody as string);
   });
 
   wbot.on("media_uploaded", async msg => {

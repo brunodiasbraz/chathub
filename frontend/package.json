@@ -1,7 +1,7 @@
 {
   "name": "frontend",
   "version": "1.0.0",
-  "systemVersion": "v1.8.1",
+  "systemVersion": "v1.9.0",
   "private": true,
   "scripts": {
     "start": "react-scripts --openssl-legacy-provider start",
@@ -11,7 +11,7 @@
   },
   "dependencies": {
     "@material-ui/core": "^4.11.0",
-    "@material-ui/icons": "^4.9.1",
+    "@material-ui/icons": "^4.11.3",
     "@material-ui/lab": "^4.0.0-alpha.56",
     "@testing-library/jest-dom": "^5.11.4",
     "@testing-library/react": "^11.0.4",
@@ -26,6 +26,7 @@
     "material-ui-color": "^1.2.0",
     "mic-recorder-to-mp3": "^2.2.2",
     "mui-audio-player": "^1.0.1",
+    "prop-types": "^15.8.1",
     "qrcode.react": "^1.0.0",
     "react": "^16.13.1",
     "react-color": "^2.19.3",
@@ -38,7 +39,7 @@
     "react-scripts": "3.4.3",
     "react-tagcloud": "^2.3.3",
     "react-toastify": "^6.0.9",
-    "recharts": "^2.0.2",
+    "recharts": "^2.13.0",
     "socket.io-client": "^3.0.5",
     "sweetalert2": "^11.14.3",
     "use-sound": "^2.0.1",

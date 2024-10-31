@@ -48,35 +48,32 @@ import toastError from "../../errors/toastError";
 import api from "../../services/api";
 import { i18n } from "../../translate/i18n";
 
-const useStyles = makeStyles((theme) => ({
-  mainPaper: {
-    flex: 1,
-    padding: theme.spacing(2),
-    margin: theme.spacing(1),
-    overflowY: "scroll",
-    ...theme.scrollbarStyles,
-  },
-  customTableCell: {
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  tooltip: {
-    backgroundColor: "#f5f5f9",
-    color: "rgba(0, 0, 0, 0.87)",
-    fontSize: theme.typography.pxToRem(14),
-    border: "1px solid #dadde9",
-    maxWidth: 450,
-  },
-  tooltipPopper: {
-    textAlign: "center",
-  },
-  buttonProgress: {
-    color: green[500],
-  },
-  primaryButton: {
-    color: "white",
-  },
+const useStyles = makeStyles(theme => ({
+	mainPaper: {
+		flex: 1,
+		padding: theme.spacing(2),
+		margin: theme.spacing(1),
+		overflowY: "scroll",
+		...theme.scrollbarStyles,
+	},
+	customTableCell: {
+		display: "flex",
+		alignItems: "center",
+		justifyContent: "center",
+	},
+	tooltip: {
+		backgroundColor: "#f5f5f9",
+		color: "rgba(0, 0, 0, 0.87)",
+		fontSize: theme.typography.pxToRem(14),
+		border: "1px solid #dadde9",
+		maxWidth: 450,
+	},
+	tooltipPopper: {
+		textAlign: "center",
+	},
+	buttonProgress: {
+		color: green[500],
+	}
 }));
 
 const CustomToolTip = ({ title, content, children }) => {
@@ -402,6 +399,9 @@ const Connections = () => {
 								{i18n.t("connections.table.name")}
 							</TableCell>
 							<TableCell align="center">
+								{i18n.t("connections.table.color")}
+							</TableCell>
+							<TableCell align="center">
 								{i18n.t("connections.table.status")}
 							</TableCell>
 							<TableCell align="center">
@@ -439,6 +439,19 @@ const Connections = () => {
 												{whatsApp.name}
 											</TableCell>
 											<TableCell align="center">
+												<div className={classes.customTableCell}>
+													<span
+														style={{
+															backgroundColor: whatsApp.color,
+															width: 20,
+															height: 20,
+															alignSelf: "center",
+															borderRadius: 10
+														}}
+													/>
+												</div>
+											</TableCell>
+											<TableCell align="center">
 												{renderStatusToolTips(whatsApp)}
 											</TableCell>
 											<TableCell align="center">
@@ -463,14 +476,12 @@ const Connections = () => {
 												)}
 											</TableCell>
 											<TableCell align="center">
-												{whatsApp.type === null && (
-													<IconButton
-														size="small"
-														onClick={() => handleEditWhatsApp(whatsApp)}
-													>
-														<Edit color="secondary" />
-													</IconButton>
-												)}
+												<IconButton
+													size="small"
+													onClick={() => handleEditWhatsApp(whatsApp)}
+												>
+													<Edit color="secondary" />
+												</IconButton>
 												<IconButton
 													size="small"
 													onClick={e => {
