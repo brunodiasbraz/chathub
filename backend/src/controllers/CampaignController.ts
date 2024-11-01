@@ -49,7 +49,11 @@ function generateGreeting(template: string, data: { name?: string, valorOriginal
 // Enviar saudação com base em um template
 export async function sendGreeting(name: string): Promise<{ status: string; message: string }> {
   try {
-    const templates = await Greeting_Template.findAll();
+    const templates = await Greeting_Template.findAll({
+      where:{
+        status: 1
+      }
+    });
 
     if (templates.length === 0) {
       return {
@@ -70,34 +74,21 @@ export async function sendGreeting(name: string): Promise<{ status: string; mess
 
 // Enviar mensagem para a API externa
 export async function sendMessageToAPI(number: string, text: string): Promise<{ status: string; data?: any; message?: string }> {
-  // const url = `${evolutionHost}/message/sendText/${instance}`;
   const url = `${process.env.BACKEND_URL}:${process.env.PORT}/api/messages/send`;
 
   const body = {
     number, 
     body: text, 
     email: "admin@pressticket.com.br",
-    queueId: "1",
-    whatsappId: "1",
+    queueId: "3",
+    whatsappId: "3",
 }
-
-  // const body = {
-  //   number,
-  //   options: {
-  //     delay: 1200,
-  //     presence: "composing",
-  //     linkPreview: false,
-  //   },
-  //   text,
-    
-  // };
 
   try {
     const response: AxiosResponse = await axios.post(url, body, {
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${apiKey}`,
-        //apikey: apiKey!,
       },
     });
 
@@ -111,17 +102,20 @@ export async function sendMessageToAPI(number: string, text: string): Promise<{ 
 // Enviar mensagens para a base de números
 export async function sendToBaseNumbers(): Promise<void> {
   try {
-    const records = await Base_Numbers.findAll({
-      attributes: ["name", "phone"],
+    const records = await Base_Numbers.findAll
+    ({  attributes: ["id", "name", "phone"],
+        where:{
+          status: 0
+        }
     });
 
     if (records.length === 0) {
-      console.log("Nenhum número encontrado na base.");
+      console.log("Nenhum número novo encontrado na base.");
       return;
     }
 
     for (const record of records) {
-      const { name, phone } = record;
+      const { id, name, phone } = record;
 
       try {
         const response = await axios.post(
@@ -131,11 +125,20 @@ export async function sendToBaseNumbers(): Promise<void> {
             number: phone,
           }
         );
+        
+        await Base_Numbers.update(
+          { status: 1 },
+          { where: { id } }
+        );
 
         console.log(
           `Mensagem enviada para ${name} (${phone}): ${response.data}`
         );
       } catch (error: any) {
+        await Base_Numbers.update(
+          { status: 2 },
+          { where: { id } }
+        );
         console.error(
           `Erro ao enviar mensagem para ${name} (${phone}):`,
           error.message

@@ -24,6 +24,9 @@ class Base_Numbers extends Model<Base_Numbers> {
   @Column
   fileId: number;
 
+  @Column
+  status: number;
+
   @CreatedAt
   createdAt: Date;
 

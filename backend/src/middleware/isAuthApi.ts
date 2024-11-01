@@ -13,9 +13,9 @@ const isAuthApi = async (
   if (!authHeader) {
     throw new AppError("ERR_SESSION_EXPIRED", 401);
   }
-
-  const [, token] = authHeader.split(" ");
-
+  
+  const token = authHeader.replace('Bearer ', '');
+  
   try {
     const getToken = await ListSettingByValueService(token);
     if (!getToken) {

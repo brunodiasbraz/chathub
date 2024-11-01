@@ -3,7 +3,7 @@ import BaseNumbers from "../../models/BaseNumbers";
 const ListBaseNumbersService = async (fileId: string): Promise<BaseNumbers[]> => {
   const numbers = await BaseNumbers.findAll({
     where: { fileId },
-    order: [["id", "ASC"]],
+    order: [["updatedAt", "DESC"]],
   });
 
   return numbers;
