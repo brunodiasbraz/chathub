@@ -1,12 +1,6 @@
-import React, { useEffect, useRef, useState } from "react";
-
-import {
-	Field,
-	Form,
-	Formik
-} from "formik";
+import React, { useState, useEffect, useRef } from "react";
 import * as Yup from "yup";
-
+import { Formik, Form, Field } from "formik";
 import {
 	Button,
 	CircularProgress,
@@ -19,18 +13,15 @@ import {
 	makeStyles,
 	TextField,
 } from "@material-ui/core";
-
-
 import { green } from "@material-ui/core/colors";
 import { toast } from "react-toastify";
 import { i18n } from "../../translate/i18n";
-
-import ColorLensIcon from '@material-ui/icons/ColorLens';
-import { SketchPicker } from 'react-color';
-import toastError from "../../errors/toastError";
 import api from "../../services/api";
+import toastError from "../../errors/toastError";
+import ColorPicker from "../ColorPicker";
+import { Colorize } from "@material-ui/icons";
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
 	root: {
 		display: "flex",
 		flexWrap: "wrap",
@@ -40,8 +31,8 @@ const useStyles = makeStyles(theme => ({
 		flex: 1,
 	},
 	container: {
-		display: 'flex',
-		flexWrap: 'wrap',
+		display: "flex",
+		flexWrap: "wrap",
 	},
 	btnWrapper: {
 		position: "relative",
@@ -54,78 +45,53 @@ const useStyles = makeStyles(theme => ({
 		marginTop: -12,
 		marginLeft: -12,
 	},
-	formControl: {
-		margin: theme.spacing(1),
-		minWidth: 120,
-	},
-	colorPreview: {
+	colorAdorment: {
 		width: 20,
 		height: 20,
-		border: '1px solid rgba(0, 0, 0, 0.23)',
 	},
-	colorPicker: {
-		position: 'absolute',
-		zIndex: 2,
-	}
 }));
 
 const QueueSchema = Yup.object().shape({
-	name: Yup.string()
-		.min(2, "Too Short!")
-		.max(50, "Too Long!")
-		.required("Required"),
+	name: Yup.string().min(2, "Too Short!").max(50, "Too Long!").required("Required"),
 	color: Yup.string().min(3, "Too Short!").max(9, "Too Long!").required(),
 	greetingMessage: Yup.string(),
 	startWork: Yup.string(),
 	endWork: Yup.string(),
-	absenceMessage: Yup.string()
+	absenceMessage: Yup.string(),
 });
 
 const QueueModal = ({ open, onClose, queueId }) => {
 	const classes = useStyles();
+
 	const initialState = {
 		name: "",
 		color: "",
 		greetingMessage: "",
-		startWork: "",
-		endWork: "",
-		absenceMessage: ""
+		startWork: "08:00",
+		endWork: "18:00",
+		absenceMessage: "",
 	};
-	const [showColorPicker, setShowColorPicker] = useState(false);
-	const [color, setColor] = useState("#5C59A0");
+
+	const [colorPickerModalOpen, setColorPickerModalOpen] = useState(false);
 	const [queue, setQueue] = useState(initialState);
 	const greetingRef = useRef();
 	const absenceRef = useRef();
 	const startWorkRef = useRef();
 	const endWorkRef = useRef();
 
-	const handleColorChange = (color) => {
-		setColor(color.hex);
-	};
-
 	useEffect(() => {
-		(async () => {
+		const fetchQueue = async () => {
 			if (!queueId) return;
 			try {
 				const { data } = await api.get(`/queue/${queueId}`);
-				setQueue(prevState => {
-					return { ...prevState, ...data };
-				});
+				setQueue((prevState) => ({ ...prevState, ...data }));
 			} catch (err) {
 				toastError(err);
 			}
-		})();
-
-		return () => {
-			setQueue({
-				name: "",
-				color: "",
-				greetingMessage: "",
-				startWork: "",
-				endWork: "",
-				absenceMessage: ""
-			});
 		};
+		fetchQueue();
+
+		return () => setQueue(initialState);
 	}, [queueId, open]);
 
 	const handleClose = () => {
@@ -133,7 +99,7 @@ const QueueModal = ({ open, onClose, queueId }) => {
 		setQueue(initialState);
 	};
 
-	const handleSaveQueue = async values => {
+	const handleSaveQueue = async (values) => {
 		try {
 			if (queueId) {
 				await api.put(`/queue/${queueId}`, values);
@@ -157,16 +123,14 @@ const QueueModal = ({ open, onClose, queueId }) => {
 				</DialogTitle>
 				<Formik
 					initialValues={queue}
-					enableReinitialize={true}
+					enableReinitialize
 					validationSchema={QueueSchema}
 					onSubmit={(values, actions) => {
-						setTimeout(() => {
-							handleSaveQueue(values);
-							actions.setSubmitting(false);
-						}, 400);
+						handleSaveQueue(values);
+						actions.setSubmitting(false);
 					}}
 				>
-					{({ touched, errors, isSubmitting, values }) => (
+					{({ touched, errors, isSubmitting, values, setFieldValue }) => (
 						<Form>
 							<DialogContent dividers>
 								<Field
@@ -180,125 +144,117 @@ const QueueModal = ({ open, onClose, queueId }) => {
 									margin="dense"
 									className={classes.textField}
 								/>
-								<TextField
-									label="Color"
-									onClick={() => setShowColorPicker(show => !show)}
-									value={color}
-									variant="outlined"
-									margin="dense"
-									className={classes.textField}
+								<Field
+									as={TextField}
+									label={i18n.t("queueModal.form.color")}
+									name="color"
+									onFocus={() => {
+										setColorPickerModalOpen(true);
+										greetingRef.current.focus();
+									}}
+									error={touched.color && Boolean(errors.color)}
+									helperText={touched.color && errors.color}
 									InputProps={{
 										startAdornment: (
 											<InputAdornment position="start">
-												<div className={classes.colorPreview} style={{ backgroundColor: color }} />
+												<div
+													style={{ backgroundColor: values.color }}
+													className={classes.colorAdorment}
+												/>
 											</InputAdornment>
 										),
 										endAdornment: (
-											<InputAdornment position="end">
-												<IconButton aria-label="color picker">
-													<ColorLensIcon />
-												</IconButton>
-											</InputAdornment>
+											<IconButton
+												size="small"
+												color="default"
+												onClick={() => setColorPickerModalOpen(true)}
+											>
+												<Colorize />
+											</IconButton>
 										),
 									}}
+									variant="outlined"
+									margin="dense"
 								/>
-								{showColorPicker && (
-									<div style={{ position: 'absolute', zIndex: 2 }}>
-										<SketchPicker color={color} onChangeComplete={handleColorChange} />
-									</div>
-								)}
-								<div>
-									<Field
-										as={TextField}
-										label={i18n.t("queueModal.form.greetingMessage")}
-										type="greetingMessage"
-										multiline
-										inputRef={greetingRef}
-										minRows={4}
-										fullWidth
-										name="greetingMessage"
-										error={
-											touched.greetingMessage && Boolean(errors.greetingMessage)
-										}
-										helperText={
-											touched.greetingMessage && errors.greetingMessage
-										}
-										variant="outlined"
-										margin="dense"
-									/>
-								</div>
-								<form className={classes.container} noValidate>
+								<ColorPicker
+									open={colorPickerModalOpen}
+									handleClose={() => setColorPickerModalOpen(false)}
+									onChange={(color) => {
+										setFieldValue("color", color);
+										setQueue((prevState) => ({
+											...prevState,
+											color,
+										}));
+									}}
+								/>
+								<Field
+									as={TextField}
+									label={i18n.t("queueModal.form.greetingMessage")}
+									type="greetingMessage"
+									multiline
+									inputRef={greetingRef}
+									rows={4}
+									fullWidth
+									name="greetingMessage"
+									error={
+										touched.greetingMessage && Boolean(errors.greetingMessage)
+									}
+									helperText={
+										touched.greetingMessage && errors.greetingMessage
+									}
+									variant="outlined"
+									margin="dense"
+								/>
+								<div className={classes.container} noValidate>
 									<Field
 										as={TextField}
 										label={i18n.t("queueModal.form.startWork")}
 										type="time"
 										ampm={false}
-										defaultValue="08:00"
-										inputRef={startWorkRef}
-										InputLabelProps={{
-											shrink: true,
-										}}
-										inputProps={{
-											step: 600, // 5 min
-										}}
+										InputLabelProps={{ shrink: true }}
+										inputProps={{ step: 600 }}
 										fullWidth
 										name="startWork"
-										error={
-											touched.startWork && Boolean(errors.startWork)
-										}
-										helperText={
-											touched.startWork && errors.startWork
-										}
+										error={touched.startWork && Boolean(errors.startWork)}
+										helperText={touched.startWork && errors.startWork}
 										variant="outlined"
 										margin="dense"
-										className={classes.textField}
+										inputRef={startWorkRef}
 									/>
 									<Field
 										as={TextField}
 										label={i18n.t("queueModal.form.endWork")}
 										type="time"
 										ampm={false}
-										defaultValue="18:00"
-										inputRef={endWorkRef}
-										InputLabelProps={{
-											shrink: true,
-										}}
-										inputProps={{
-											step: 600, // 5 min
-										}}
+										InputLabelProps={{ shrink: true }}
+										inputProps={{ step: 600 }}
 										fullWidth
 										name="endWork"
-										error={
-											touched.endWork && Boolean(errors.endWork)
-										}
-										helperText={
-											touched.endWork && errors.endWork
-										}
+										error={touched.endWork && Boolean(errors.endWork)}
+										helperText={touched.endWork && errors.endWork}
 										variant="outlined"
 										margin="dense"
-										className={classes.textField}
-									/>
-								</form>
-								<div>
-									<Field
-										as={TextField}
-										label={i18n.t("queueModal.form.absenceMessage")}
-										type="absenceMessage"
-										multiline
-										inputRef={absenceRef}
-										minRows={2}
-										fullWidth
-										name="absenceMessage"
-										error={
-											touched.absenceMessage && Boolean(errors.absenceMessage)
-										}
-										helperText={
-											touched.absenceMessage && errors.absenceMessage
-										}
-										variant="outlined"
-										margin="dense"
+										inputRef={endWorkRef}
 									/>
 								</div>
+								<Field
+									as={TextField}
+									label={i18n.t("queueModal.form.absenceMessage")}
+									type="absenceMessage"
+									multiline
+									inputRef={absenceRef}
+									rows={2}
+									fullWidth
+									name="absenceMessage"
+									error={
+										touched.absenceMessage && Boolean(errors.absenceMessage)
+									}
+									helperText={
+										touched.absenceMessage && errors.absenceMessage
+									}
+									variant="outlined"
+									margin="dense"
+								/>
 							</DialogContent>
 							<DialogActions>
 								<Button
@@ -317,8 +273,8 @@ const QueueModal = ({ open, onClose, queueId }) => {
 									className={classes.btnWrapper}
 								>
 									{queueId
-										? `${i18n.t("queueModal.buttons.okEdit")}`
-										: `${i18n.t("queueModal.buttons.okAdd")}`}
+										? i18n.t("queueModal.buttons.okEdit")
+										: i18n.t("queueModal.buttons.okAdd")}
 									{isSubmitting && (
 										<CircularProgress
 											size={24}

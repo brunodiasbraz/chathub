@@ -20,8 +20,9 @@ import {
   Box,
   Typography,
   Grid,
+  CircularProgress
 } from "@material-ui/core";
-import { Telegram, Info } from "@material-ui/icons"; // Info icon for "i"
+import { Telegram, Info } from "@material-ui/icons";
 import { makeStyles } from "@material-ui/core/styles";
 
 const useStyles = makeStyles((theme) => ({
@@ -39,17 +40,17 @@ const useStyles = makeStyles((theme) => ({
     fontSize: "1.1rem",
   },
   card: {
-    border: "1px solid #e0e0e0", // Borda de 1px, sólida, cor cinza claro
+    border: "1px solid #e0e0e0",
     padding: theme.spacing(2),
     marginBottom: theme.spacing(2),
-    borderRadius: theme.shape.borderRadius, // Para bordas arredondadas, opcional
+    borderRadius: theme.shape.borderRadius,
   },
   gridContainer: {
     display: "flex",
     justifyContent: "space-between",
   },
   leftColumn: {
-    paddingRight: theme.spacing(2), // Adiciona espaço entre a coluna de arquivos e a tabela
+    paddingRight: theme.spacing(2),
   },
   rightColumn: {
     flexGrow: 1,
@@ -63,7 +64,24 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: "#c6f6d5",
     fontSize: "12px",
     padding: "0.2rem 1rem",
-    // marginLeft: theme.spacing(1),
+    borderRadius: "20px",
+    display: "inline-block",
+  },
+  pillPrimary: {
+    fontWeight: 500,
+    color: "dark",
+    backgroundColor: "#F1F1F1",
+    fontSize: "12px",
+    padding: "0.2rem 1rem",
+    borderRadius: "20px",
+    display: "inline-block",
+  },
+  pillWarning: {
+    fontWeight: 500,
+    color: "#DD6B20",
+    backgroundColor: "#FEEBC8",
+    fontSize: "12px",
+    padding: "0.2rem 1rem",
     borderRadius: "20px",
     display: "inline-block",
   },
@@ -72,9 +90,10 @@ const useStyles = makeStyles((theme) => ({
 const TabNewCampaign = () => {
   const classes = useStyles();
   const [baseNumbers, setBaseNumbers] = useState([]);
-  const [selectedFileId, setSelectedFileId] = useState(null); // File ID selected
+  const [fileStatuses, setFileStatuses] = useState({});
   const [confirmModalOpen, setConfirmModalOpen] = useState(false);
-  const [files, setFiles] = useState([]); // Files imported to render
+  const [files, setFiles] = useState([]);
+  const [loading, setLoading] = useState(false);
 
   // Função para buscar os números na base pelo fileId
   const fetchBaseNumbers = async (fileId) => {
@@ -88,12 +107,34 @@ const TabNewCampaign = () => {
     }
   };
 
+  // Função para determinar o status do arquivo com base nos números
+  const getFileStatus = (numbers) => {
+    const allStatus = numbers.map((num) => num.status);
+    if (allStatus.every((status) => status === 1)) {
+      return { label: "Sucesso", class: classes.pillSuccess };
+    } else if (allStatus.some((status) => status === 2)) {
+      return { label: "Finalizado com Erros", class: classes.pillWarning };
+    } else {
+      return { label: "Pendente", class: classes.pillPrimary };
+    }
+  };
+
   // Função para buscar os arquivos importados
   useEffect(() => {
     const fetchFiles = async () => {
       try {
         const response = await api.get(`/campaign/showFiles`);
-        setFiles(response.data);
+        const filesData = response.data;
+        setFiles(filesData);
+
+        // Carrega o status de cada arquivo ao carregar a página
+        const statuses = {};
+        for (let file of filesData) {
+          const baseNumbersResponse = await api.get(`/campaign/showBaseNumbers?fileId=${file.id}`);
+          const status = getFileStatus(baseNumbersResponse.data);
+          statuses[file.id] = status;
+        }
+        setFileStatuses(statuses);
       } catch (error) {
         toast.error("Erro ao carregar os arquivos.");
       }
@@ -104,11 +145,14 @@ const TabNewCampaign = () => {
 
   // Função para lidar com a confirmação de disparo de mensagens
   const handleSendMessages = async () => {
+    setLoading(true);
     try {
       await api.post("/send-messages", { numeros: baseNumbers });
       toast.success("Mensagens disparadas com sucesso!");
     } catch (error) {
       toast.error("Erro ao disparar mensagens.");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -132,19 +176,27 @@ const TabNewCampaign = () => {
             <Tooltip title="Disparar Mensagens">
               <Button
                 variant="contained"
-                onClick={() => {
-                  setConfirmModalOpen(true);
-                }}
+                onClick={handleSendMessages}
                 color="primary"
                 className={classes.primaryButton}
+                disabled={loading}
               >
-                  <Telegram/>
+                {loading ? (
+                  <>
+                    <CircularProgress size={20} color="inherit" style={{ marginRight: 8 }} />
+                    Enviando...
+                  </>
+                ) : (
+                  <>
+                    <Telegram size={20} color="inherit" style={{ marginRight: 8 }}/>
+                    <span style={{ marginRight: 8 }}>Disparar Mensagens</span>
+                  </>
+                )}
               </Button>
             </Tooltip>
           </MainHeaderButtonsWrapper>
         </MainHeader>
 
-        {/* Grid para organizar os cards à esquerda e a tabela à direita */}
         <Grid container className={classes.gridContainer} spacing={2}>
           <Grid item xs={12} md={3} className={classes.leftColumn}>
             {files.map((file) => (
@@ -155,17 +207,19 @@ const TabNewCampaign = () => {
                   justifyContent="space-between"
                 >
                   <Typography className={classes.textCardFiles}>
-                    <strong>Arquivo:</strong> {file.arquivo}
+                    <strong>#</strong> {file.id}
                   </Typography>
                   <IconButton
                     onClick={() => {
-                      setSelectedFileId(file.id);
-                      fetchBaseNumbers(file.id); // Fetch numbers for the selected file
+                      fetchBaseNumbers(file.id);
                     }}
                   >
                     <Info />
                   </IconButton>
                 </Box>
+                <Typography className={classes.textCardFiles}>
+                  <strong>Arquivo:</strong> {file.arquivo}
+                </Typography>
                 <Typography className={classes.textCardFiles}>
                   <strong>Qnt de Linhas:</strong> {file.qntLinhas}
                 </Typography>
@@ -176,7 +230,9 @@ const TabNewCampaign = () => {
 
                 <Typography className={classes.textCardFiles}>
                   <strong>Status:</strong>{" "}
-                  <span className={classes.pillSuccess}>Sucesso</span>
+                  <span className={fileStatuses[file.id]?.class || classes.pillPrimary}>
+                    {fileStatuses[file.id]?.label || "Pendente"}
+                  </span>
                 </Typography>
               </Paper>
             ))}
@@ -188,9 +244,11 @@ const TabNewCampaign = () => {
                 <TableHead>
                   <TableRow>
                     <TableCell align="center">ID</TableCell>
-                    <TableCell align="center">Name</TableCell>
-                    <TableCell align="center">Phone</TableCell>
-                    <TableCell align="center">File ID</TableCell>
+                    <TableCell align="center">Nome Cliente</TableCell>
+                    <TableCell align="center">Número</TableCell>
+                    <TableCell align="center">ID Arquivo</TableCell>
+                    <TableCell align="center">Status</TableCell>
+                    <TableCell align="center">Atualizado em</TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
@@ -200,6 +258,18 @@ const TabNewCampaign = () => {
                       <TableCell align="center">{number.name}</TableCell>
                       <TableCell align="center">{number.phone}</TableCell>
                       <TableCell align="center">{number.fileId}</TableCell>
+                      <TableCell align="center">
+                        <span className={
+                          number.status === 0 ? classes.pillPrimary :
+                          number.status === 1 ? classes.pillSuccess :
+                          number.status === 2 ? classes.pillWarning : ""
+                        }>
+                          {number.status === 0 ? "Não Enviado" :
+                          number.status === 1 ? "Sucesso" :
+                          number.status === 2 ? "Erro" : ""}
+                        </span>
+                      </TableCell>
+                      <TableCell align="center">{format(new Date(number.updatedAt), "dd/MM/yyyy HH:mm:ss")}</TableCell>
                     </TableRow>
                   ))}
                 </TableBody>

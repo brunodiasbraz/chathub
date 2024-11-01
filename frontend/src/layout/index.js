@@ -90,7 +90,7 @@ const useStyles = makeStyles((theme) => ({
       duration: theme.transitions.duration.enteringScreen,
     }),
     overflowY: "scroll",
-    direction: "rtl",
+    direction: "ltr",
   },
   drawerContent: {
     direction: "ltr", // Retorna a direção do conteúdo para a leitura normal (da esquerda para a direita)
@@ -100,7 +100,7 @@ const useStyles = makeStyles((theme) => ({
       width: "8px", // Afina a barra de rolagem
     },
     "&::-webkit-scrollbar-thumb": {
-      backgroundColor: "#888", // Cor da barra de rolagem
+      backgroundColor: "#E5E5E5", // Cor da barra de rolagem
       borderRadius: "10px",
     },
     "&::-webkit-scrollbar-thumb:hover": {
