@@ -110,8 +110,7 @@ export async function sendToBaseNumbers(): Promise<void> {
     });
 
     if (records.length === 0) {
-      console.log("Nenhum número novo encontrado na base.");
-      return;
+      throw new Error("Nenhum número novo encontrado na base.");
     }
 
     for (const record of records) {
@@ -148,7 +147,7 @@ export async function sendToBaseNumbers(): Promise<void> {
       await sleep(5000); // Pausa de 5 segundos entre os envios
     }
   } catch (error: any) {
-    console.error("Erro ao buscar números da base:", error);
+    throw error;
   }
 }
 
@@ -265,7 +264,7 @@ export const sendMessagesToBase = async (req: Request, res: Response) => {
     await sendToBaseNumbers();
     return res.status(200).send("Mensagens enviadas com sucesso!");
   } catch (error) {
-    return res.status(500).send("Erro ao enviar mensagens: " + error.message);
+    return res.status(404).send(error.message);
   }
 };
 

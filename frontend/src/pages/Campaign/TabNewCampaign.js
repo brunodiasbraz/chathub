@@ -136,7 +136,7 @@ const TabNewCampaign = () => {
         }
         setFileStatuses(statuses);
       } catch (error) {
-        toast.error("Erro ao carregar os arquivos.");
+        toast.error("Erro ao carregar omessages arquivos.");
       }
     };
 
@@ -147,10 +147,10 @@ const TabNewCampaign = () => {
   const handleSendMessages = async () => {
     setLoading(true);
     try {
-      await api.post("/send-messages", { numeros: baseNumbers });
-      toast.success("Mensagens disparadas com sucesso!");
+      const response = await api.post("/send-messages", { numeros: baseNumbers });
+      toast.success(response.data);
     } catch (error) {
-      toast.error("Erro ao disparar mensagens.");
+      toast.error(error.response.data);
     } finally {
       setLoading(false);
     }
