@@ -17,6 +17,7 @@ import UpdateGreetingTemplateService from "../services/Campaign/UpdateGreetingTe
 import DeleteGreetingTemplateService from "../services/Campaign/DeleteGreetingTemplateService";
 import ListFilesService from "../services/Campaign/ListFilesService";
 import ListBaseNumbersService from "../services/Campaign/ListBaseNumbersService";
+import { id } from "date-fns/locale";
 
 type IndexQuery = {
   searchParam: string;
@@ -28,10 +29,7 @@ interface GreetingTemplateData {
   status: number;
 }
 
-// Variáveis de ambiente
 const apiKey: string | undefined = process.env.API_KEY_PRESSTICKET;
-//const instance: string | undefined = process.env.EVOLUTION_INSTANCE;
-//const evolutionHost: string | undefined = process.env.EVOLUTION_HOST;
 
 if (!apiKey) {
   throw new Error("A API_KEY deve estar definida no arquivo .env.");
@@ -73,17 +71,18 @@ export async function sendGreeting(name: string): Promise<{ status: string; mess
 }
 
 // Enviar mensagem para a API externa
-export async function sendMessageToAPI(number: string, text: string): Promise<{ status: string; data?: any; message?: string }> {
+export async function sendMessageToAPI(number: string, text: string, userEmail: string, userWppId: string, userQueueId: string): Promise<{ status: string; data?: any; message?: string }> {
   const url = `${process.env.BACKEND_URL}:${process.env.PORT}/api/messages/send`;
 
   const body = {
     number, 
     body: text, 
-    email: "admin@pressticket.com.br",
-    queueId: "3",
-    whatsappId: "3",
+    email: userEmail,
+    queueId: userQueueId,
+    whatsappId: userWppId,
 }
 
+  console.log('Body ::: ', body)
   try {
     const response: AxiosResponse = await axios.post(url, body, {
       headers: {
@@ -100,7 +99,8 @@ export async function sendMessageToAPI(number: string, text: string): Promise<{ 
 }
 
 // Enviar mensagens para a base de números
-export async function sendToBaseNumbers(): Promise<void> {
+export async function sendToBaseNumbers(userProfile: any): Promise<void> {
+
   try {
     const records = await Base_Numbers.findAll
     ({  attributes: ["id", "name", "phone"],
@@ -120,11 +120,14 @@ export async function sendToBaseNumbers(): Promise<void> {
         const response = await axios.post(
           "http://localhost:8080/send-greeting",
           {
+            userEmail: userProfile.email,
+            userWppId: userProfile.whatsappId,
+            userQueueId: userProfile.queues[0].id,
             name,
             number: phone,
           }
         );
-        
+
         await Base_Numbers.update(
           { status: 1 },
           { where: { id } }
@@ -194,18 +197,18 @@ export async function uploadFile(req: Request, res: Response): Promise<Response>
       readStream.on("data", async (dadosLinha: CSVData) => {
         linhaCount++;
 
-        const user = await Base_Numbers.findOne({
-          attributes: ["id"],
-          where: { phone: dadosLinha.phone },
-        });
+        // const user = await Base_Numbers.findOne({
+        //   attributes: ["id"],
+        //   where: { phone: dadosLinha.phone },
+        // });
 
-        if (!user) {
+        //if (!user) {
           await Base_Numbers.create({
             phone: dadosLinha.phone,
             name: dadosLinha.name,
             fileId: arquivoId
           });
-        }
+        //}
       });
 
       readStream.on("end", async () => {
@@ -214,7 +217,7 @@ export async function uploadFile(req: Request, res: Response): Promise<Response>
           { qntLinhas: linhaCount }, 
           { where: { id: arquivoId } }
         );
-        resolve(res.status(200).send(`Importação concluída! Total de linhas no arquivo:  ${linhaCount}`));
+        resolve(res.status(200).send({msg: `Importação concluída! Total de linhas no arquivo:  ${linhaCount}`, idArquivo: arquivoId}));
       });
 
       readStream.on("error", (error) => {
@@ -231,10 +234,12 @@ export async function uploadFile(req: Request, res: Response): Promise<Response>
 
 // Função para enviar uma saudação personalizada
 export const sendGreetingMessage = async (req: Request, res: Response) => {
-  const { name, number } = req.body;
+  const { name, number, userEmail, userWppId, userQueueId } = req.body;
 
   if (!name || !number) {
     return res.status(400).send("Erro: 'name' e 'number' são obrigatórios.");
+  } else if (!userWppId || !userQueueId){
+    return res.status(400).send("Erro: Você não possui Conexão ou Fila vinculado. Por favor vincule-se para continuar");
   }
 
   try {
@@ -246,7 +251,7 @@ export const sendGreetingMessage = async (req: Request, res: Response) => {
     }
 
     // Envia a saudação via API
-    const sendResult = await sendMessageToAPI(number, result.message);
+    const sendResult = await sendMessageToAPI(number, result.message, userEmail, userWppId, userQueueId);
 
     if (sendResult.status === "error") {
       return res.status(500).send("Erro ao enviar mensagem para o número: " + sendResult.message);
@@ -260,8 +265,9 @@ export const sendGreetingMessage = async (req: Request, res: Response) => {
 
 // Função para enviar mensagens para os números na base
 export const sendMessagesToBase = async (req: Request, res: Response) => {
+  let userProfile = req.body.user;
   try {
-    await sendToBaseNumbers();
+    await sendToBaseNumbers(userProfile);
     return res.status(200).send("Mensagens enviadas com sucesso!");
   } catch (error) {
     return res.status(404).send(error.message);

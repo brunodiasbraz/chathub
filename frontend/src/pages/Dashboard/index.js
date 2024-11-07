@@ -37,7 +37,7 @@ const useStyles = makeStyles(theme => ({
 	},
 	fixedHeightPaper: {
 		padding: theme.spacing(2),
-		backgroundColor: theme.palette.background.paper,
+		// backgroundColor: theme.palette.background.paper,
 		display: "flex",
 		overflow: "auto",
 		flexDirection: "column",

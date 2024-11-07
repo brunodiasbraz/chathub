@@ -1,12 +1,12 @@
-import React, { useState, useContext } from "react";
+import React, { useState } from "react";
 import PropTypes from "prop-types";
 import { Formik, Form } from "formik";
 import { i18n } from "../../translate/i18n";
 import { FiUpload } from "react-icons/fi";
 import api from "../../services/api";
 import toastError from "../../errors/toastError";
-import { AuthContext } from "../../context/Auth/AuthContext";
 import { toast } from "react-toastify";
+import BaseNumbersModal from "../../components/BaseNumbersModal";
 
 import {
   Button,
@@ -80,10 +80,23 @@ export default function NewCampaignModal({ open, onClose }) {
   const [file, setFile] = useState({ selectedFile: null });
   const setDragActive = useState(false);
   const [msg, setMsg] = useState("");
-  const { user } = useContext(AuthContext);
+  const [selectedFileId, setSelectedFileId] = useState(null);
+  const [baseNumbersModalOpen, setBaseNumbersModalOpen] = useState(false);
+
+  const apiKey = process.env.API_KEY_PRESSTICKET;
 
   const handleClose = () => {
     onClose();
+  };
+  const handleOpenBaseNumbersModal = (fileId) => {
+    const id = Number(fileId.fileId);
+    setSelectedFileId(id);
+    setBaseNumbersModalOpen(true);
+        
+  };
+  const handleCloseBaseNumbersModal = () => {
+    setBaseNumbersModalOpen(false);
+    setSelectedFileId(null);
   };
 
   const checkFileType = (e, eventType) => {
@@ -155,18 +168,21 @@ export default function NewCampaignModal({ open, onClose }) {
       const formData = new FormData();
       formData.append("arquivo", file.selectedFile);
 
-      // console.log("userNome>>> ", user);
       try {
-        await api.post("/upload", formData, {
+        const response = await api.post("/upload", formData, {
           headers: {
             "Content-Type": "multipart/form-data",
-            Authorization: "Bearer ff461a99-add3-459f-a0ff-c731a24cfe27",
+            Authorization: `Bearer ${apiKey}`,
           },
         });
         toast.success("Arquivo CSV Carregado com sucesso!");
+        handleOpenBaseNumbersModal({ fileId: response.data.idArquivo });
+
         resetForm(); // Reseta o formulário
         setFile({ selectedFile: null }); // Reseta o arquivo selecionado
         onClose();
+
+
       } catch (err) {
         toastError("Error uploading file:", err);
         console.error("Error uploading file:", err);
@@ -178,6 +194,12 @@ export default function NewCampaignModal({ open, onClose }) {
 
   return (
     <div className={classes.root}>
+      <BaseNumbersModal
+        open={baseNumbersModalOpen}
+        onClose={handleCloseBaseNumbersModal}
+        fileId={selectedFileId}
+      >
+      </BaseNumbersModal>
       <Dialog open={open} onClose={handleClose} maxWidth="xs" fullWidth>
         <DialogTitle>Incluir nova campanha</DialogTitle>
         <Formik

@@ -1,34 +1,39 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import api from "../../services/api";
 import MainContainer from "../../components/MainContainer";
-import MainHeader from "../../components/MainHeader";
-import MainHeaderButtonsWrapper from "../../components/MainHeaderButtonsWrapper";
-import { i18n } from "../../translate/i18n";
+// import MainHeader from "../../components/MainHeader";
+// import MainHeaderButtonsWrapper from "../../components/MainHeaderButtonsWrapper";
+// import { i18n } from "../../translate/i18n";
 import { toast } from "react-toastify";
 import { format } from "date-fns";
 import ConfirmationModal from "../../components/ConfirmationModal";
 import {
-  Button,
+  //Button,
   Paper,
   Table,
   TableBody,
   TableCell,
   TableHead,
   TableRow,
-  Tooltip,
+  //Tooltip,
   IconButton,
   Box,
   Typography,
   Grid,
-  CircularProgress
+  //CircularProgress
 } from "@material-ui/core";
-import { Telegram, Info } from "@material-ui/icons";
+import { Info } from "@material-ui/icons";
 import { makeStyles } from "@material-ui/core/styles";
+import { AuthContext } from "../../context/Auth/AuthContext";
 
 const useStyles = makeStyles((theme) => ({
   root: {
     width: "100%",
+    padding: theme.spacing(2),
     backgroundColor: theme.palette.background.paper,
+    borderRadius: theme.shape.borderRadius,
+    border: "1px solid #e0e0e0",
+    // overflow: "hidden",
   },
   customTableCell: {
     padding: theme.spacing(2),
@@ -50,10 +55,11 @@ const useStyles = makeStyles((theme) => ({
     justifyContent: "space-between",
   },
   leftColumn: {
-    paddingRight: theme.spacing(2),
+    paddingRight: theme.spacing(4),
   },
   rightColumn: {
     flexGrow: 1,
+    marginBottom: theme.spacing(4),
   },
   textCardFiles: {
     fontSize: "0.9rem",
@@ -93,7 +99,8 @@ const TabNewCampaign = () => {
   const [fileStatuses, setFileStatuses] = useState({});
   const [confirmModalOpen, setConfirmModalOpen] = useState(false);
   const [files, setFiles] = useState([]);
-  const [loading, setLoading] = useState(false);
+  const [/*loading,*/ setLoading] = useState(false);
+  const { user } = useContext(AuthContext);
 
   // Função para buscar os números na base pelo fileId
   const fetchBaseNumbers = async (fileId) => {
@@ -146,8 +153,9 @@ const TabNewCampaign = () => {
   // Função para lidar com a confirmação de disparo de mensagens
   const handleSendMessages = async () => {
     setLoading(true);
+    
     try {
-      const response = await api.post("/send-messages", { numeros: baseNumbers });
+      const response = await api.post("/send-messages", { numeros: baseNumbers, user });
       toast.success(response.data);
     } catch (error) {
       toast.error(error.response.data);
@@ -168,7 +176,7 @@ const TabNewCampaign = () => {
           Deseja disparar a campanha para os números listados?
         </ConfirmationModal>
 
-        <MainHeader>
+        {/* <MainHeader>
           <Tooltip title={i18n.t("campaign.templates.tooltip")}>
             <p className={classes.subtitle}>Dashboard</p>
           </Tooltip>
@@ -195,9 +203,9 @@ const TabNewCampaign = () => {
               </Button>
             </Tooltip>
           </MainHeaderButtonsWrapper>
-        </MainHeader>
+        </MainHeader> */}
 
-        <Grid container className={classes.gridContainer} spacing={2}>
+        <Grid className={classes.gridContainer} spacing={2}>
           <Grid item xs={12} md={3} className={classes.leftColumn}>
             {files.map((file) => (
               <Paper key={file.id} className={classes.card}>

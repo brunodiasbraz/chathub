@@ -8,7 +8,7 @@
     "migrate": "tsc && npx sequelize-cli db:migrate",
     "migrate:undo": "tsc && npx sequelize-cli db:migrate:undo",
     "watch": "tsc -w",
-    "start": "concurrently -n \"BACKEND,FRONTEND\" -c \"green,blue\" \"npm run api:start\" \"npm run frontend:start\"",
+    "start": "concurrently -n \"BACKEND,FRONTEND\" -c \"green,blue\" \"npm run dev:server\" \"npm run frontend:start\"",
     "api:start": "nodemon dist/server.js",
     "frontend:start": "cd ../frontend && npm start",
     "dev:server": "ts-node-dev --respawn --transpile-only --ignore node_modules src/server.ts",
