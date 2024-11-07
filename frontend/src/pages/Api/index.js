@@ -66,9 +66,9 @@ const Api = () => {
     const [number, setNumber] = useState("");
     const [body, setBody] = useState("");
     const [media, setMedia] = useState(null);
-    const [userId, setUserId] = useState();
-    const [queueId, setQueueId] = useState();
-    const [whatsappId, setWhatsappId] = useState();
+    const [userId, setUserId] = useState("");
+    const [queueId, setQueueId] = useState("");
+    const [whatsappId, setWhatsappId] = useState("");
     const [settings, setSettings] = useState([]);
     const [users, setUsers] = useState([]);
     const [queues, setQueues] = useState([]);
@@ -237,7 +237,7 @@ const Api = () => {
                                         label="User ID"
                                         variant="outlined"
                                         fullWidth
-                                        value={userId}
+                                        value={userId || ""}
                                         onChange={(e) => setUserId(e.target.value)}
                                         required
                                     >
@@ -255,7 +255,7 @@ const Api = () => {
                                         label="Setor ID"
                                         variant="outlined"
                                         fullWidth
-                                        value={queueId}
+                                        value={queueId || ""}
                                         onChange={(e) => setQueueId(e.target.value)}
                                         required
                                     >
@@ -273,15 +273,18 @@ const Api = () => {
                                         label="WhatsApp ID"
                                         variant="outlined"
                                         fullWidth
-                                        value={whatsappId}
+                                        value={whatsappId || ""}
                                         onChange={(e) => setWhatsappId(e.target.value)}
                                         required
                                     >
-                                        {whatsapps.map((whatsapp) => (
-                                            <option key={whatsapp.id} value={whatsapp.id}>
-                                                {whatsapp.name}
-                                            </option>
-                                        ))}
+                                        {whatsapps
+                                            .filter(whatsapp => whatsapp.type === null)
+                                            .map((whatsapp) => (
+                                                <option key={whatsapp.id} value={whatsapp.id}>
+                                                    {whatsapp.name}
+                                                </option>
+                                            ))
+                                        }
                                     </TextField>
                                 </Grid>
                             </Grid>

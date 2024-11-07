@@ -15,6 +15,9 @@ import CreateGreetingTemplateService from "../services/Campaign/CreateGreetingTe
 import ShowGreetingTemplateService from "../services/Campaign/ShowGreetingTemplateService";
 import UpdateGreetingTemplateService from "../services/Campaign/UpdateGreetingTemplateService";
 import DeleteGreetingTemplateService from "../services/Campaign/DeleteGreetingTemplateService";
+import ListFilesService from "../services/Campaign/ListFilesService";
+import ListBaseNumbersService from "../services/Campaign/ListBaseNumbersService";
+import { id } from "date-fns/locale";
 
 type IndexQuery = {
   searchParam: string;
@@ -26,10 +29,7 @@ interface GreetingTemplateData {
   status: number;
 }
 
-// Variáveis de ambiente
 const apiKey: string | undefined = process.env.API_KEY_PRESSTICKET;
-//const instance: string | undefined = process.env.EVOLUTION_INSTANCE;
-//const evolutionHost: string | undefined = process.env.EVOLUTION_HOST;
 
 if (!apiKey) {
   throw new Error("A API_KEY deve estar definida no arquivo .env.");
@@ -47,7 +47,11 @@ function generateGreeting(template: string, data: { name?: string, valorOriginal
 // Enviar saudação com base em um template
 export async function sendGreeting(name: string): Promise<{ status: string; message: string }> {
   try {
-    const templates = await Greeting_Template.findAll();
+    const templates = await Greeting_Template.findAll({
+      where:{
+        status: 1
+      }
+    });
 
     if (templates.length === 0) {
       return {
@@ -67,35 +71,23 @@ export async function sendGreeting(name: string): Promise<{ status: string; mess
 }
 
 // Enviar mensagem para a API externa
-export async function sendMessageToAPI(number: string, text: string): Promise<{ status: string; data?: any; message?: string }> {
-  // const url = `${evolutionHost}/message/sendText/${instance}`;
+export async function sendMessageToAPI(number: string, text: string, userEmail: string, userWppId: string, userQueueId: string): Promise<{ status: string; data?: any; message?: string }> {
   const url = `${process.env.BACKEND_URL}:${process.env.PORT}/api/messages/send`;
 
-  const body =   {
+  const body = {
     number, 
     body: text, 
-    email: "admin@pressticket.com.br",
-    queueId: "1",
-    whatsappId: "1",
+    email: userEmail,
+    queueId: userQueueId,
+    whatsappId: userWppId,
 }
 
-  // const body = {
-  //   number,
-  //   options: {
-  //     delay: 1200,
-  //     presence: "composing",
-  //     linkPreview: false,
-  //   },
-  //   text,
-    
-  // };
-
+  console.log('Body ::: ', body)
   try {
     const response: AxiosResponse = await axios.post(url, body, {
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${apiKey}`,
-        //apikey: apiKey!,
       },
     });
 
@@ -107,33 +99,48 @@ export async function sendMessageToAPI(number: string, text: string): Promise<{ 
 }
 
 // Enviar mensagens para a base de números
-export async function sendToBaseNumbers(): Promise<void> {
+export async function sendToBaseNumbers(userProfile: any): Promise<void> {
+
   try {
-    const records = await Base_Numbers.findAll({
-      attributes: ["name", "phone"],
+    const records = await Base_Numbers.findAll
+    ({  attributes: ["id", "name", "phone"],
+        where:{
+          status: 0
+        }
     });
 
     if (records.length === 0) {
-      console.log("Nenhum número encontrado na base.");
-      return;
+      throw new Error("Nenhum número novo encontrado na base.");
     }
 
     for (const record of records) {
-      const { name, phone } = record;
+      const { id, name, phone } = record;
 
       try {
         const response = await axios.post(
           "http://localhost:8080/send-greeting",
           {
+            userEmail: userProfile.email,
+            userWppId: userProfile.whatsappId,
+            userQueueId: userProfile.queues[0].id,
             name,
             number: phone,
           }
+        );
+
+        await Base_Numbers.update(
+          { status: 1 },
+          { where: { id } }
         );
 
         console.log(
           `Mensagem enviada para ${name} (${phone}): ${response.data}`
         );
       } catch (error: any) {
+        await Base_Numbers.update(
+          { status: 2 },
+          { where: { id } }
+        );
         console.error(
           `Erro ao enviar mensagem para ${name} (${phone}):`,
           error.message
@@ -143,7 +150,7 @@ export async function sendToBaseNumbers(): Promise<void> {
       await sleep(5000); // Pausa de 5 segundos entre os envios
     }
   } catch (error: any) {
-    console.error("Erro ao buscar números da base:", error);
+    throw error;
   }
 }
 
@@ -154,75 +161,85 @@ function sleep(ms: number): Promise<void> {
 
 export async function uploadFile(req: Request, res: Response): Promise<Response> {
   return new Promise<Response>(async (resolve, reject) => {
-    // Verifique se o arquivo foi enviado
     if (!req.file) {
       return resolve(res.status(400).send("Erro: Selecione arquivo CSV!"));
     }
 
-    // Diretório onde o CSV será salvo
     const uploadDir = path.join(__dirname, "../../public/upload/csv");
 
-    // Verifica se o diretório existe, se não, cria
     if (!fs.existsSync(uploadDir)) {
       fs.mkdirSync(uploadDir, { recursive: true });
     }
 
-    // Caminho completo do arquivo CSV
-    const arquivoCSV = path.join(uploadDir, req.file.filename);
+    const nomeOriginal = req.file.originalname;
+    const caminhoDestino = path.join(uploadDir, nomeOriginal);
+    fs.renameSync(req.file.path, caminhoDestino);
 
-    console.log("Arquivo CSV salvo em: ", arquivoCSV);
+    console.log("Arquivo CSV salvo em: ", caminhoDestino);
+    let linhaCount = 0;
 
     interface CSVData {
       phone: string;
       name: string;
     }
 
-    const arquivo = req.file.filename;
-
     try {
-      await Arquivos.create({ arquivo });
-    }catch (error) {
-      console.log("Erro ao salvar no banco de dados: ", error);
-      return res.status(500).send("Erro: Nome do arquivo não foi salvo no banco de dados!");
-    }
-
-    // Processar o arquivo CSV
-    try {
-      const readStream = fs.createReadStream(arquivoCSV).pipe(csv());
-
-      readStream.on("data", async (dadosLinha: CSVData) => {
-        const user = await Base_Numbers.findOne({
-          attributes: ["id"],
-          where: { phone: dadosLinha.phone },
-        });
-
-        if (!user) {
-          await Base_Numbers.create(dadosLinha);
-        }
+      const arquivoSalvo = await Arquivos.create({
+        arquivo: nomeOriginal,
+        caminhoArquivo: caminhoDestino
       });
 
-      readStream.on("end", () => {
+      const arquivoId = arquivoSalvo.id;
+
+      // Processar o arquivo CSV
+      const readStream = fs.createReadStream(caminhoDestino).pipe(csv());
+
+      readStream.on("data", async (dadosLinha: CSVData) => {
+        linhaCount++;
+
+        // const user = await Base_Numbers.findOne({
+        //   attributes: ["id"],
+        //   where: { phone: dadosLinha.phone },
+        // });
+
+        //if (!user) {
+          await Base_Numbers.create({
+            phone: dadosLinha.phone,
+            name: dadosLinha.name,
+            fileId: arquivoId
+          });
+        //}
+      });
+
+      readStream.on("end", async () => {
         console.log("Leitura do CSV concluída.");
-        // Enviar resposta ao cliente após concluir a leitura do CSV
-        resolve(res.status(200).send("Importação concluída."));
+        await Arquivos.update(
+          { qntLinhas: linhaCount }, 
+          { where: { id: arquivoId } }
+        );
+        resolve(res.status(200).send({msg: `Importação concluída! Total de linhas no arquivo:  ${linhaCount}`, idArquivo: arquivoId}));
       });
 
       readStream.on("error", (error) => {
         console.error("Erro ao ler o CSV: ", error);
         reject(res.status(500).send("Erro ao processar o arquivo CSV."));
       });
+
     } catch (error) {
-      return resolve(res.status(500).send("Erro durante o processamento do CSV."));
+      console.log("Erro ao salvar no banco de dados: ", error);
+      return res.status(500).send("Erro: Não foi possível processar o arquivo.");
     }
   });
 }
 
 // Função para enviar uma saudação personalizada
 export const sendGreetingMessage = async (req: Request, res: Response) => {
-  const { name, number } = req.body;
+  const { name, number, userEmail, userWppId, userQueueId } = req.body;
 
   if (!name || !number) {
     return res.status(400).send("Erro: 'name' e 'number' são obrigatórios.");
+  } else if (!userWppId || !userQueueId){
+    return res.status(400).send("Erro: Você não possui Conexão ou Fila vinculado. Por favor vincule-se para continuar");
   }
 
   try {
@@ -234,7 +251,7 @@ export const sendGreetingMessage = async (req: Request, res: Response) => {
     }
 
     // Envia a saudação via API
-    const sendResult = await sendMessageToAPI(number, result.message);
+    const sendResult = await sendMessageToAPI(number, result.message, userEmail, userWppId, userQueueId);
 
     if (sendResult.status === "error") {
       return res.status(500).send("Erro ao enviar mensagem para o número: " + sendResult.message);
@@ -248,11 +265,12 @@ export const sendGreetingMessage = async (req: Request, res: Response) => {
 
 // Função para enviar mensagens para os números na base
 export const sendMessagesToBase = async (req: Request, res: Response) => {
+  let userProfile = req.body.user;
   try {
-    await sendToBaseNumbers();
+    await sendToBaseNumbers(userProfile);
     return res.status(200).send("Mensagens enviadas com sucesso!");
   } catch (error) {
-    return res.status(500).send("Erro ao enviar mensagens: " + error.message);
+    return res.status(404).send(error.message);
   }
 };
 
@@ -358,3 +376,27 @@ export const remove = async (
 
 //   return res.status(200).json({ message: "All Quick Answer deleted" });
 // };
+
+/**Função para pegar todos os arquivos importados no banco*/
+export const showFiles = async (req: Request, res: Response): Promise<Response> => {
+  
+  const files = await ListFilesService();
+
+  return res.json(files);
+};
+/**Função para pegar todos os numeros importados referentes ao arquivo clicado no banco*/
+export const showBaseNumbers = async (req: Request, res: Response): Promise<Response> => {
+  try {
+    const { fileId } = req.query;
+
+    if (!fileId) {
+      return res.status(400).json({ error: "fileId é necessário." });
+    }
+
+    const baseNumbers = await ListBaseNumbersService(String(fileId));
+
+    return res.json(baseNumbers);
+  } catch (error) {
+    return res.status(500).json({ error: "Erro ao buscar números base." });
+  }
+};

@@ -1,12 +1,14 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import api from "../../services/api";
 import MainContainer from "../../components/MainContainer";
 import MainHeader from "../../components/MainHeader";
 import NewCampaignModal from "../../components/NewCampaignModal";
+import BaseNumbersModal from "../../components/BaseNumbersModal";
 import MainHeaderButtonsWrapper from "../../components/MainHeaderButtonsWrapper";
 import Title from "../../components/Title";
 import { i18n } from "../../translate/i18n";
 import TabGreetingTemplates from "./TabGreetingTemplates";
+import TabNewCampaign from "./TabNewCampaign";
 import GreetingTemplatesModal from "../../components/GreetingTemplatesModal";
 import ConfirmationModal from "../../components/ConfirmationModal";
 import { toast } from "react-toastify";
@@ -21,6 +23,7 @@ import {
   Box,
   Typography,
 } from "@material-ui/core";
+import InfoIcon from '@material-ui/icons/Info';
 import PropTypes from "prop-types"; // Adicione esta linha para importar o PropTypes
 
 function TabPanel(props) {
@@ -60,7 +63,7 @@ function a11yProps(index) {
 const useStyles = makeStyles((theme) => ({
   root: {
     width: "100%",
-    backgroundColor: theme.palette.background.paper,
+    //backgroundColor: theme.palette.background.paper,
   },
   tabs: {
     flexGrow: 1,
@@ -100,40 +103,48 @@ const Campaign = () => {
   const [value, setValue] = useState(0);
   const [newTemplateModalOpen, setNewTemplateModalOpen] = useState(false);
   const [newCampaignModalOpen, setNewCampaignModalOpen] = useState(false);
+  const [baseNumbersModalOpen, setBaseNumbersModalOpen] = useState(false);
   const setGreetingTemplates = useState([]);
   const [deletingGreetingTemplates, setDeletingGreetingTemplates] =
     useState(null);
   const [confirmModalOpen, setConfirmModalOpen] = useState(false);
-  const [newTemplateData, setNewTemplateData] = useState({
-      template: "",
-      status: "1",
-    });
+  // const [newTemplateData, setNewTemplateData] = useState({
+  //     template: "",
+  //     status: "1",
+  //   });
 
   // Função para carregar os templates
-  useEffect(() => {
-    const fetchTemplates = async () => {
-      try {
-        const response = await api.get(`/campaign`);
-        setGreetingTemplates(response.data);
-      } catch (error) {
-        console.error("Erro ao carregar templates:", error);
-      }
-    };
+  // useEffect(() => {
+  //   const fetchTemplates = async () => {
+  //     try {
+  //       const response = await api.get(`/campaign`);
+  //       setGreetingTemplates(response.data);
+  //     } catch (error) {
+  //       console.error("Erro ao carregar templates:", error);
+  //     }
+  //   };
 
-    fetchTemplates();
-  }, []);
+  //   fetchTemplates();
+  // }, []);
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
 
-  const handleOpenNewTemplateModal = (id) => {
-    setNewTemplateData({ id });
-    setNewTemplateModalOpen(true);
-  };
+  // const handleOpenNewTemplateModal = (id) => {
+  //   setNewTemplateData({ id });
+  //   setNewTemplateModalOpen(true);
+  // };
 
     const handleOpenNewCampaignModal = () => {
       setNewCampaignModalOpen(true);
+    };
+
+    const handleOpenBaseNumbersModal = () => {
+      setBaseNumbersModalOpen(true);
+    };
+    const handleCloseBaseNumbersModal = () => {
+      setBaseNumbersModalOpen(false);
     };
 
     const handleCloseNewCampaignModal = () => {
@@ -173,6 +184,10 @@ const handleSaveToTable = (newData) => {
   return (
     <div className={classes.root}>
       <MainContainer>
+        <BaseNumbersModal
+        open={baseNumbersModalOpen}
+        onClose={handleCloseBaseNumbersModal}>
+        </BaseNumbersModal>
         <NewCampaignModal
           open={newCampaignModalOpen}
           onClose={handleCloseNewCampaignModal}
@@ -201,6 +216,14 @@ const handleSaveToTable = (newData) => {
         <MainHeader>
           <Title>{i18n.t("campaign.title")}</Title>
           <MainHeaderButtonsWrapper>
+          <Button
+              variant="contained"
+              onClick={handleOpenBaseNumbersModal}
+              color="primary"
+              className={classes.primaryButton}
+            >
+              <InfoIcon/>
+            </Button>
             <Button
               variant="contained"
               onClick={handleOpenNewCampaignModal}
@@ -220,13 +243,13 @@ const handleSaveToTable = (newData) => {
             textColor="primary"
             centered
           >
-            <Tab label="Ativas" {...a11yProps(0)} />
+            <Tab label="Dashboard" {...a11yProps(0)} />
             <Tab label="Mensagens" {...a11yProps(1)} />
           </Tabs>
         </Paper>
 
         <TabPanel value={value} index={0}>
-          Conteúdo da aba Campanhas Ativas
+          <TabNewCampaign/>
         </TabPanel>
         <TabPanel value={value} index={1}>
           <TabGreetingTemplates/>
@@ -236,7 +259,7 @@ const handleSaveToTable = (newData) => {
         open={newTemplateModalOpen}
         onClose={handleCloseNewTemplateModal}
         onSave={handleSaveToTable}
-        greetingTemplateId={newTemplateData && newTemplateData.id}
+        //greetingTemplateId={newTemplateData && newTemplateData.id}
       />
     </div>
   );

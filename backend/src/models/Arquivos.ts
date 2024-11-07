@@ -23,6 +23,12 @@ class Arquivos extends Model<Arquivos> {
   @Column
   arquivo: string;
 
+  @Column
+  qntLinhas: number;
+
+  @Column
+  caminhoArquivo: string;
+
   @CreatedAt
   createdAt: Date;
 

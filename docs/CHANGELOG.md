@@ -1,5 +1,57 @@
 # Changelog
 
+### v1.9.0
+
+- [Ajuste no workflow](https://github.com/rtenorioh/Press-Ticket/commit/ef2484d4dffbc3cdf39ac3264dbed265fdd9967f);
+- [Atualização de versão](https://github.com/rtenorioh/Press-Ticket/commit/82ce9aa8320e5b83312d71ff4c5c88bf02a11887);
+- [Remoção do spread operator e alteração de rows para minRows](https://github.com/rtenorioh/Press-Ticket/commit/62fd321621f95d48b185c5cd57316bc32273d71c);
+- [Correção de componente ser chamado após desmontado](https://github.com/rtenorioh/Press-Ticket/commit/26c1da7d27f6640cf8378312070f7de6c72c4ca2);
+- [Correção de atributo com grafia incorreta](https://github.com/rtenorioh/Press-Ticket/commit/a8dcd1306220f08734e6f95bdf8fd412cbee438d);
+- [Remoção da tag h2 usada incorretamente](https://github.com/rtenorioh/Press-Ticket/commit/ba6cc5595c87a792991dd219f88a164586502540);
+- [Correção da restrição do AudioContext imposta pelos navegadores](https://github.com/rtenorioh/Press-Ticket/commit/6bd6c2e58aa12d29c94f01e8cc478bc5397ece0e);
+- [Ajuste no valor indefinido sendo passado para o componente TextField](https://github.com/rtenorioh/Press-Ticket/commit/795bce1c34c25fd61c338d8ef9ea72d5f8b169c1);
+- [Correção no aviso sobre validateDOMNesting](https://github.com/rtenorioh/Press-Ticket/commit/9a9230bccc07cb67c0707786106f11091a15f775);
+- [Ajuste no avatar do contato](https://github.com/rtenorioh/Press-Ticket/commit/9d6a7d70f4b0fe5fbaab2848d1238eaeccfb2098);
+- [Ajuste no layout em Integrações](https://github.com/rtenorioh/Press-Ticket/commit/90103d03f182c7abdcb91f0fe1a701c1391be536);
+- [Correção em Configurações para integrações](https://github.com/rtenorioh/Press-Ticket/commit/21e8ba956fdd7e40b2c380cf073f472017173ea4);
+- [Atualização nas documentações](https://github.com/rtenorioh/Press-Ticket/commit/8230d08c04e356a789fcd9e08adbce26d3d55bdc);
+- [Atualização na lib wwebjs](https://github.com/rtenorioh/Press-Ticket/commit/1ac82f017d0ce382b31b0ef5f06a224ef90504de);
+- [Exclusão de arquivo sem uso](https://github.com/rtenorioh/Press-Ticket/commit/54f8922f80c72cdad182f4960c5cceab63b2045e);
+- [Atualização do README](https://github.com/rtenorioh/Press-Ticket/commit/980be20cd68aa22cf1df03fe2638fa65042ce278);
+- [Autenticando o Websocket com token](https://github.com/rtenorioh/Press-Ticket/commit/cbada47fb8da9639661089b733c38eb0657a3db7);
+- [Correção do warning do overlap](https://github.com/rtenorioh/Press-Ticket/commit/d2a110c234dc9a6655faaf1ba278d58c72741418);
+- [Add Editar mensagens](https://github.com/rtenorioh/Press-Ticket/commit/fb4e3266afeafc4e5bacc33d4b5f2214e34056d7);
+- [Add Histórico das Edições](https://github.com/rtenorioh/Press-Ticket/commit/a276acc26721a4032c7c8b2c75f1dee54c19af45);
+- [Remoção do Setor duplicado e ajuste no layout](https://github.com/rtenorioh/Press-Ticket/commit/9f68ed837ea4433245628dabb87bc75a5ded511b);
+- [Correção na grafia do username](https://github.com/rtenorioh/Press-Ticket/commit/d4b65bfc9cb32c0a2eb96cb50794e2b1d91490c3);
+- [Novo dashboard](https://github.com/rtenorioh/Press-Ticket/commit/92c23913165d0d083c3d44c2a15e9f479f3348ff);
+- [Correção no função de data](https://github.com/rtenorioh/Press-Ticket/commit/ed479caa7ad2488ac2661f82a72043e0d087e12b);
+- [Add e Alter Color Whatsapp, Tag, Queue e Connection](https://github.com/rtenorioh/Press-Ticket/commit/6a3ec204c97009388f19250a169b08f715421838);
+- [exclusão do txt do projeto](https://github.com/rtenorioh/Press-Ticket/commit/8b5513f65f947a6922f76dba1cdcdef06cfd40d5);
+- [Correção de warning](https://github.com/rtenorioh/Press-Ticket/commit/68d8e82a3992045a89e5acca1cc4c9b113df58ec);
+- [Correção de warnings nos tickets](https://github.com/rtenorioh/Press-Ticket/commit/b5cf760b42934290cdda9ca78308747db22c44f4); e
+- [Atualização de versão](https://github.com/rtenorioh/Press-Ticket/commit/6d90054006921f16aff70103a04fd6331ddb5380).
+
+### v1.8.1
+
+- [Correção do workflow release.yml](https://github.com/rtenorioh/Press-Ticket/commit/679c0d28b7852b3a625551209d3f49ae4ecda7fa);
+- [Correção em foreign key](https://github.com/rtenorioh/Press-Ticket/commit/fc4e30f1483cb807a2d4ae386a930c39d2e128fc);
+- [Ajuste na validação do toastError](https://github.com/rtenorioh/Press-Ticket/commit/68d9c80338a274543d3ffbe2512218dc46480ec1);
+- [Correção no ID na ativação do Channel](https://github.com/rtenorioh/Press-Ticket/commit/b90fa7ee36802bf62326b806db57b84420d3e242); e
+- [Atualização do README](https://github.com/rtenorioh/Press-Ticket/commit/8276c9ee378f065fc48dfc5db60a22a086491560).
+
+### v1.8.0
+
+- [CRUD apenas admin ou habilitado nas configurações](https://github.com/rtenorioh/Press-Ticket/commit/87638c7c7410e6f29c3775aeab2f186888f16bb6)
+- [Atualização](https://github.com/rtenorioh/Press-Ticket/commit/addd9c4e0d1e5425588894304c78bc6cdca61da8)
+- [Implementação NotificameHub](https://github.com/rtenorioh/Press-Ticket/commit/4cf78a3a5f19e8c9217c41529ed74efc3c66c0bf)
+- [Melhoria no Location](https://github.com/rtenorioh/Press-Ticket/commit/bf3ed164db6364ed7dea5352286299490c0b4407)
+- [Atualização no UPDATE.sh](https://github.com/rtenorioh/Press-Ticket/commit/bc67ab2813805f721c601fa67e93df4a59d33393)
+- [Ajustes nos Docs de Instalação](https://github.com/rtenorioh/Press-Ticket/commit/11f1b8bc2e5b945edff7d5c95d17a8b60b9a9cd1)
+- [Correção para exibir apenas a wwebjs](https://github.com/rtenorioh/Press-Ticket/commit/01f24ef412d82fac4a692dc7e9efb4d88058a19e)
+- [Leve ajuste no layout do dashboard](https://github.com/rtenorioh/Press-Ticket/commit/61bb2962e6face78b057d59147ac30acd24ce80a)
+- [ajuste no layout do whatsappModal](https://github.com/rtenorioh/Press-Ticket/commit/26c3874c9daa62597b3cde79563540322c7c3ae8)
+
 ### 23/09/2024
 
 - [Ajuste no atualizador](https://github.com/rtenorioh/Press-Ticket/commit/0a96ad8bdc537f3670afb5ecd31a9242bcc44b21);

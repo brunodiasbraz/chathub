@@ -1,9 +1,8 @@
-"use strict";
+import { QueryInterface } from "sequelize";
 
-/** @type {import('sequelize-cli').Migration} */
 module.exports = {
-  async up(queryInterface, Sequelize) {
-    await queryInterface.bulkInsert(
+  up: (queryInterface: QueryInterface) => {
+    return queryInterface.bulkInsert(
       "Greeting_Templates",
       [
         {
@@ -57,7 +56,7 @@ module.exports = {
     );
   },
 
-  async down(queryInterface, Sequelize) {
-    await queryInterface.bulkDelete("Greeting_Templates", null, {});
+  down: (queryInterface: QueryInterface) => {
+    return queryInterface.bulkDelete("Greeting_Templates", {});
   }
 };

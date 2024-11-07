@@ -69,10 +69,12 @@ const useStyles = makeStyles((theme) => ({
     paddingRight: theme.spacing(2),
   },
   listItemText: {
-  display: "flex",
-  alignItems: "center",
-}
-
+    display: "flex",
+    alignItems: "center",
+    "& .MuiTypography-body1": {
+      fontSize: "13.6px",
+    },
+  },
 }));
 
 function ListItemLink(props) {
@@ -93,7 +95,7 @@ function ListItemLink(props) {
         {icon ? (
           <ListItemIcon className={classes.icon}>{icon}</ListItemIcon>
         ) : null}
-        <ListItemText primary={primary} />
+        <ListItemText className={classes.listItemText} primary={primary} />
       </ListItem>
     </li>
   );

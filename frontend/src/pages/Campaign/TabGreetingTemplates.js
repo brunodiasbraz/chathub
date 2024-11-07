@@ -55,6 +55,9 @@ const useStyles = makeStyles((theme) => ({
   root: {
     width: "100%",
     backgroundColor: theme.palette.background.paper,
+    padding: theme.spacing(2),
+    borderRadius: theme.shape.borderRadius,
+    border: "1px solid #e0e0e0",
   },
   tabs: {
     flexGrow: 1,
