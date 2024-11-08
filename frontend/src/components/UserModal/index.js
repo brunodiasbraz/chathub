@@ -254,6 +254,9 @@ const UserModal = ({ open, onClose, userId }) => {
                             id="profile-selection"
                             required
                           >
+                            <MenuItem value="superuser">
+                            SuperUser
+                            </MenuItem>
                             <MenuItem value="admin">
                               {i18n.t("userModal.form.admin")}
                             </MenuItem>

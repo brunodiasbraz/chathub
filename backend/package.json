@@ -23,6 +23,7 @@
     "@sentry/node": "^5.29.2",
     "@types/mime-types": "^2.1.4",
     "@types/pino": "^6.3.4",
+    "asterisk-manager": "^0.2.0",
     "axios": "^1.7.7",
     "bcryptjs": "^2.4.3",
     "concurrently": "^9.0.1",

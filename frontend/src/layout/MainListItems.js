@@ -10,7 +10,6 @@ import {
   ListItem,
   ListItemIcon,
   ListItemText,
-  //ListSubheader,
   makeStyles,
 } from "@material-ui/core";
 
@@ -107,18 +106,18 @@ const MainListItems = (props) => {
   const { user } = useContext(AuthContext);
   const [connectionWarning, setConnectionWarning] = useState(false);
   const classes = useStyles();
-  const location = useLocation(); // Aqui pegamos o location corretamente
+  const location = useLocation(); 
 
-const isActive = (path) => {
-  if (path === "/" || path === "/api") {
-    return location.pathname === path;
-  }
-  return location.pathname.startsWith(path);
-};
+  const isActive = (path) => {
+    if (path === "/" || path === "/api") {
+      return location.pathname === path;
+    }
+    return location.pathname.startsWith(path);
+  };
   const [open, setOpen] = useState(false);
 
   const handleClick = () => {
-    setOpen(!open); // Alterna o estado de abertura
+    setOpen(!open); 
   };
 
   useEffect(() => {
@@ -193,9 +192,6 @@ const isActive = (path) => {
         yes={() => (
           <>
             <Divider className={classes.divider} />
-            {/* <ListSubheader inset className={classes.sub}>
-              {i18n.t("mainDrawer.listItems.administration")}
-            </ListSubheader> */}
             <ListItemLink
               to="/campaign"
               primary={i18n.t("mainDrawer.listItems.campaign")}
@@ -259,29 +255,20 @@ const isActive = (path) => {
               )}
             />
 
-            {/* Item principal "API" */}
+            {/* Condição para superuser */}
+            <Can
+              role={user.profile}
+              perform="superuser-dashboard:access"
+              yes={() => (
+                <ListItem button onClick={handleClick} className={clsx(classes.listItem)}>
+                  <ListItemIcon><Code /></ListItemIcon>
+                  <ListItemText primary={i18n.t("mainDrawer.listItems.apititle")} />
+                  {open ? <ExpandLess /> : <ExpandMore />}
+                </ListItem>
+              )}
+            />
 
-            <ListItem
-              button
-              onClick={handleClick}
-              className={clsx(classes.listItem)}
-              style={{ padding: 0, margin: 0 }}
-            >
-              <ListItemLink
-                to="#"
-                primary={i18n.t("mainDrawer.listItems.apititle")}
-                icon={<Code />}
-              />
-              <>
-                {open ? (
-                  <ExpandLess style={{ marginLeft: 8, padding: 2 }} />
-                ) : (
-                  <ExpandMore style={{ marginLeft: 8, padding: 2 }} />
-                )}
-              </>
-            </ListItem>
-
-            {/* Lista de subitens */}
+            {/* Subitens do menu API */}
             <Collapse in={open} timeout="auto" unmountOnExit>
               <List component="div" disablePadding>
                 <ListItemLink
