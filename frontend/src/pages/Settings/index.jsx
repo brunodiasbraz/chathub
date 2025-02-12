@@ -113,7 +113,7 @@ const Settings = () => {
 	}, []);
 
 	useEffect(() => {
-		const socket = openSocket(process.env.REACT_APP_BACKEND_URL);
+		const socket = openSocket(import.meta.env.VITE_BACKEND_URL);
 
 		socket.on("settings", data => {
 			if (data.action === "update") {

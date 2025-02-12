@@ -11,7 +11,7 @@ import {
 import { makeStyles } from "@material-ui/core/styles";
 import CloseIcon from "@material-ui/icons/Close";
 import React, { useState } from "react";
-import codeSnippets from './codeSnippets.js';
+import codeSnippets from './codeSnippets.jsx';
 
 const useStyles = makeStyles(theme => ({
     root: {

@@ -153,9 +153,9 @@ cd Press-Ticket/frontend
 Crie ou edite o arquivo `.env` no diretório `frontend` com as seguintes informações:
 
 ```bash
-REACT_APP_BACKEND_URL=http://localhost:8080
-REACT_APP_HOURS_CLOSE_TICKETS_AUTO=
-REACT_APP_PAGE_TITLE=PressTicket
+VITE_BACKEND_URL=http://localhost:8080
+VITE_HOURS_CLOSE_TICKETS_AUTO=
+VITE_PAGE_TITLE=PressTicket
 PORT=3333
 ```
 

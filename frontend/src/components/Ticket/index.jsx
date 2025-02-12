@@ -12,7 +12,7 @@ import { ReplyMessageProvider } from "../../context/ReplyingMessage/ReplyingMess
 import toastError from "../../errors/toastError";
 import api from "../../services/api";
 import ContactDrawer from "../ContactDrawer";
-import MessageInput from "../MessageInput/";
+import MessageInput from "../MessageInput";
 import MessagesList from "../MessagesList";
 import TicketActionButtons from "../TicketActionButtons";
 import TicketHeader from "../TicketHeader";

@@ -280,7 +280,7 @@ const LoggedInLayout = ({ children }) => {
       <AppBar
         position="absolute"
         className={clsx(classes.appBar, drawerOpen && classes.appBarShift)}
-        color={process.env.NODE_ENV === "development" ? "inherit" : "primary"}
+        color={import.meta.env.NODE_ENV === "development" ? "inherit" : "primary"}
         elevation={0} //Retirar a Sombra
       >
         <Toolbar variant="dense" className={classes.toolbar}>

@@ -6,7 +6,7 @@ import { FiUpload } from "react-icons/fi";
 import api from "../../services/api";
 import toastError from "../../errors/toastError";
 import { toast } from "react-toastify";
-import BaseNumbersModal from "../../components/BaseNumbersModal";
+import BaseNumbersModal from "../BaseNumbersModal";
 
 import {
   Button,
@@ -83,7 +83,7 @@ export default function NewCampaignModal({ open, onClose }) {
   const [selectedFileId, setSelectedFileId] = useState(null);
   const [baseNumbersModalOpen, setBaseNumbersModalOpen] = useState(false);
 
-  const apiKey = process.env.API_KEY_PRESSTICKET;
+  const apiKey = import.meta.env.API_KEY_PRESSTICKET;
 
   const handleClose = () => {
     onClose();

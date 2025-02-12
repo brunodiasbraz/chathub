@@ -13,9 +13,9 @@ import {
 import { Visibility, VisibilityOff } from "@material-ui/icons";
 
 import { toast } from "react-toastify";
-import Title from "../../components/Title";
+import Title from "../../components/Title/index.jsx";
 import toastError from "../../errors/toastError";
-import api from "../../services/api";
+import api from "../../services/api.js";
 import { i18n } from "../../translate/i18n.js";
 
 const useStyles = makeStyles(theme => ({
@@ -74,7 +74,7 @@ const Integrations = () => {
 	}, []);
 
 	useEffect(() => {
-		const socket = openSocket(process.env.REACT_APP_BACKEND_URL);
+		const socket = openSocket(import.meta.env.VITE_BACKEND_URL);
 
 		socket.on("integrations", data => {
 			if (data.action === "update") {

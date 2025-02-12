@@ -4,8 +4,8 @@ import PropTypes from "prop-types";
 import api from "../../services/api";
 // import toastError from "../../errors/toastError";
 import { AuthContext } from "../../context/Auth/AuthContext";
-import MainHeader from "../../components/MainHeader";
-import MainHeaderButtonsWrapper from "../../components/MainHeaderButtonsWrapper";
+import MainHeader from "../MainHeader";
+import MainHeaderButtonsWrapper from "../MainHeaderButtonsWrapper";
 import { toast } from "react-toastify";
 import { format } from "date-fns";
 

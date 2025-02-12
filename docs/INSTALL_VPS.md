@@ -305,13 +305,13 @@ npm install
 
 ```bash
 #URL BACKEND
-REACT_APP_BACKEND_URL=https://back.pressticket.com.br
+VITE_BACKEND_URL=https://back.pressticket.com.br
 
 #Tempo de encerramento automático dos tickets
-REACT_APP_HOURS_CLOSE_TICKETS_AUTO=
+VITE_HOURS_CLOSE_TICKETS_AUTO=
 
 #Nome da Guia do navegador
-REACT_APP_PAGE_TITLE=PressTicket
+VITE_PAGE_TITLE=PressTicket
 
 #PORTA do frontend
 PORT=3333

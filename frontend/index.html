@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 	<head>
-		<title>%REACT_APP_PAGE_TITLE%</title>
+		<title>%VITE_PAGE_TITLE%</title>
 		<link href="https://fonts.googleapis.com/css2?family=Assistant:wght@200..800&display=swap" rel="stylesheet">
-		<link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
+		<link rel="manifest" href="/manifest.json" />
 		<meta name="theme-color" content="#000000" />
 		<meta name="viewport" content="minimum-scale=1, initial-scale=1, width=device-width" />
 		<noscript id="env-insertion-point"></noscript>
@@ -11,5 +11,6 @@
 	<body>
 		<noscript>Você precisa habilitar o JavaScript para rodar este app.</noscript>
 		<div id="root"></div>
+		 <script type="module" src="/src/index.jsx"></script>
 	</body>
 </html>

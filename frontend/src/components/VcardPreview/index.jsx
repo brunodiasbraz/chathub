@@ -13,7 +13,7 @@ import {
 
 // import { AuthContext } from "../../context/Auth/AuthContext";
 
-import NewTicketModalPageContact from "../../components/NewTicketModalPageContact";
+import NewTicketModalPageContact from "../NewTicketModalPageContact";
 
 const VcardPreview = ({ contact, numbers }) => {
     const history = useHistory();

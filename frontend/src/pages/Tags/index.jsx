@@ -137,7 +137,7 @@ const Tags = () => {
   }, [searchParam, pageNumber, fetchTags]);
 
   useEffect(() => {
-    const socket = openSocket(process.env.REACT_APP_BACKEND_URL);
+    const socket = openSocket(import.meta.env.VITE_BACKEND_URL);
 
     socket.on("tags", (data) => {
       if (data.action === "update" || data.action === "create") {

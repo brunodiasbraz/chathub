@@ -1,6 +1,6 @@
 /* eslint-disable no-useless-escape */
 const codeSnippets = {
-  HTTP: (number, body, userId, queueId, whatsappId, token) => `POST ${process.env.REACT_APP_BACKEND_URL}/api/messages/send HTTP/1.1
+  HTTP: (number, body, userId, queueId, whatsappId, token) => `POST ${import.meta.env.VITE_BACKEND_URL}/api/messages/send HTTP/1.1
 User-Agent: vscode-restclient
 Authorization: Bearer ${token}
 Content-Type: application/json
@@ -17,7 +17,7 @@ Content-Length: ${85 + body.length}
   JavaScript_JQuery: (number, body, userId, queueId, whatsappId, token) => `const settings = {
   "async": true,
   "crossDomain": true,
-  "url": "${process.env.REACT_APP_BACKEND_URL}/api/messages/send}",
+  "url": "${import.meta.env.VITE_BACKEND_URL}/api/messages/send}",
   "method": "POST",
   "headers": {
     "user-agent": "vscode-restclient",
@@ -33,7 +33,7 @@ $.ajax(settings).done(function (response) {
 });
         `,
   JavaScript_fetch: (number, body, userId, queueId, whatsappId, token) => `
-        fetch("${process.env.REACT_APP_BACKEND_URL}/api/messages/send", {
+        fetch("${import.meta.env.VITE_BACKEND_URL}/api/messages/send", {
             "method": "POST",
             "headers": {
                 "user-agent": "vscode-restclient",
@@ -59,7 +59,7 @@ $.ajax(settings).done(function (response) {
         const request = require('request');
         const options = {
             method: 'POST',
-            url: '${process.env.REACT_APP_BACKEND_URL}/api/messages/send',
+            url: '${import.meta.env.VITE_BACKEND_URL}/api/messages/send',
             headers: {
                 'user-agent': 'vscode-restclient',
                 'Authorization': 'Bearer ${token}',
@@ -87,7 +87,7 @@ $curl = curl_init();
 
 curl_setopt_array($curl, [
   CURLOPT_PORT => "4000",
-  CURLOPT_URL => "${process.env.REACT_APP_BACKEND_URL}/api/messages/send",
+  CURLOPT_URL => "${import.meta.env.VITE_BACKEND_URL}/api/messages/send",
   CURLOPT_RETURNTRANSFER => true,
   CURLOPT_ENCODING => "",
   CURLOPT_MAXREDIRS => 10,

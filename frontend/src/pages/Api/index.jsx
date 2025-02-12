@@ -154,7 +154,7 @@ const Api = () => {
         }
 
         try {
-            const response = await axios.post(`${process.env.REACT_APP_BACKEND_URL}/api/messages/send`, payload, {
+            const response = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/messages/send`, payload, {
                 headers: {
                     Authorization: `Bearer ${token}`,
                     "Content-Type": media ? "multipart/form-data" : "application/json"
@@ -191,14 +191,14 @@ const Api = () => {
 
                         <h2 className={classes.color}>1. Mensagens de Texto</h2>
                         <p>Seguem abaixo lista de informações necessárias para envio das mensagens de texto:</p>
-                        <p className={classes.textP}><b>URL: </b>{process.env.REACT_APP_BACKEND_URL}/api/messages/send</p>
+                        <p className={classes.textP}><b>URL: </b>{import.meta.env.VITE_BACKEND_URL}/api/messages/send</p>
                         <p className={classes.textP}><b>Método: </b>POST</p>
                         <p className={classes.textP}><b>Headers: </b>Authorization: Bearer (token) e Content-Type application/json</p>
                         <p className={classes.textP}><b>Body: </b>"number": "5599999999999", "body": "Enviado via api", "userId": "1", "queueId": "1", "whatsappId": "1"</p>
 
                         <h2 className={classes.color}>2. Mensagens de Mídia</h2>
                         <p>Seguem abaixo lista de informações necessárias para envio de mídias:</p>
-                        <p className={classes.textP}><b>URL: </b>{process.env.REACT_APP_BACKEND_URL}/api/messages/send</p>
+                        <p className={classes.textP}><b>URL: </b>{import.meta.env.VITE_BACKEND_URL}/api/messages/send</p>
                         <p className={classes.textP}><b>Método: </b>POST</p>
                         <p className={classes.textP}><b>Headers: </b>Authorization: Bearer (token) e Content-Type multipart/form-data</p>
                         <p className={classes.textP}><b>Body: </b>"number": "5599999999999", "medias": "aqui vai sua mídia", "body": "Enviado via api", "userId": "1", "queueId": "1", "whatsappId": "1"</p>

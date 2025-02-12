@@ -32,7 +32,7 @@ import api from "../../services/api";
 import { i18n } from "../../translate/i18n";
 
 import { Can } from "../../components/Can";
-import ConfirmationModal from "../../components/ConfirmationModal/";
+import ConfirmationModal from "../../components/ConfirmationModal";
 import ContactChannels from "../../components/ContactChannels";
 import ContactModal from "../../components/ContactModal";
 import MainContainer from "../../components/MainContainer";
