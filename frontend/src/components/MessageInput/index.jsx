@@ -33,7 +33,7 @@ import {
 import clsx from "clsx";
 import { Picker } from "emoji-mart";
 import "emoji-mart/css/emoji-mart.css";
-import MicRecorder from "mic-recorder-to-mp3";
+// import MicRecorder from "mic-recorder-to-mp3";
 import PropTypes from "prop-types";
 import React, {
   useContext,
@@ -51,7 +51,7 @@ import api from "../../services/api";
 import { i18n } from "../../translate/i18n";
 import RecordingTimer from "./RecordingTimer";
 
-const Mp3Recorder = new MicRecorder({ bitRate: 128 });
+// const Mp3Recorder = new MicRecorder({ bitRate: 128 });
 
 const useStyles = makeStyles((theme) => ({
   mainWrapper: {
@@ -385,18 +385,18 @@ const MessageInput = ({ ticketStatus }) => {
     setEditingMessage(null);
   };
 
-  const handleStartRecording = async () => {
-    setLoading(true);
-    try {
-      await navigator.mediaDevices.getUserMedia({ audio: true });
-      await Mp3Recorder.start();
-      setRecording(true);
-      setLoading(false);
-    } catch (err) {
-      toastError(err);
-      setLoading(false);
-    }
-  };
+  // const handleStartRecording = async () => {
+  //   setLoading(true);
+  //   try {
+  //     await navigator.mediaDevices.getUserMedia({ audio: true });
+  //     await Mp3Recorder.start();
+  //     setRecording(true);
+  //     setLoading(false);
+  //   } catch (err) {
+  //     toastError(err);
+  //     setLoading(false);
+  //   }
+  // };
 
   const handleLoadQuickAnswer = async (value) => {
     if (value && value.indexOf("/") === 0) {
@@ -418,42 +418,42 @@ const MessageInput = ({ ticketStatus }) => {
     }
   };
 
-  const handleUploadAudio = async () => {
-    setLoading(true);
-    try {
-      const [, blob] = await Mp3Recorder.stop().getMp3();
-      if (blob.size < 10000) {
-        setLoading(false);
-        setRecording(false);
-        return;
-      }
+  // const handleUploadAudio = async () => {
+  //   setLoading(true);
+  //   try {
+  //     const [, blob] = await Mp3Recorder.stop().getMp3();
+  //     if (blob.size < 10000) {
+  //       setLoading(false);
+  //       setRecording(false);
+  //       return;
+  //     }
 
-      const formData = new FormData();
-      const filename = `${new Date().getTime()}.mp3`;
-      formData.append("medias", blob, filename);
-      formData.append("body", filename);
-      formData.append("fromMe", true);
-      if (channelType !== null) {
-        await api.post(`/hub-message/${ticketId}`, formData);
-      } else {
-        await api.post(`/messages/${ticketId}`, formData);
-      }
-    } catch (err) {
-      toastError(err);
-    }
+  //     const formData = new FormData();
+  //     const filename = `${new Date().getTime()}.mp3`;
+  //     formData.append("medias", blob, filename);
+  //     formData.append("body", filename);
+  //     formData.append("fromMe", true);
+  //     if (channelType !== null) {
+  //       await api.post(`/hub-message/${ticketId}`, formData);
+  //     } else {
+  //       await api.post(`/messages/${ticketId}`, formData);
+  //     }
+  //   } catch (err) {
+  //     toastError(err);
+  //   }
 
-    setRecording(false);
-    setLoading(false);
-  };
+  //   setRecording(false);
+  //   setLoading(false);
+  // };
 
-  const handleCancelAudio = async () => {
-    try {
-      await Mp3Recorder.stop().getMp3();
-      setRecording(false);
-    } catch (err) {
-      toastError(err);
-    }
-  };
+  // const handleCancelAudio = async () => {
+  //   try {
+  //     await Mp3Recorder.stop().getMp3();
+  //     setRecording(false);
+  //   } catch (err) {
+  //     toastError(err);
+  //   }
+  // };
 
   const handleOpenMenuClick = (event) => {
     setAnchorEl(event.currentTarget);
